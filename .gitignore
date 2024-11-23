@@ -1,0 +1,82 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Vue CLI outputs
+.vuepress/dist
+.vite/
+.vitepress/dist
+output/
+
+# Temporary files and directories
+tmp/
+temp/
+cache/
+*.temp
+
+# Editor and IDE files
+.idea/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Testing
+coverage/
+*.lcov
+jest/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Typescript
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm/
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Package lock files (if using only yarn or pnpm, you can ignore the others)
+package-lock.json
+pnpm-lock.yaml
+
+# VSCode specific files (if WebStorm is the primary IDE)
+.vscode/
+
+# Other generated files
+*.bak
+*.pid
+*.seed
+*.seed.*
+
+# Storybook
+.storybook-out/
+
+# Local e2e output
+cypress/screenshots/
+cypress/videos/
+
+# Other
+*.local
+*.log.[0-9]
