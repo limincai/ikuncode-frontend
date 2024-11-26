@@ -4,6 +4,7 @@
       <GlobalHeader />
     </a-layout-header>
     <a-layout-content class="content">
+      111 111 111
       <router-view />
     </a-layout-content>
     <a-layout-footer class="footer">
@@ -30,7 +31,7 @@ const loginUser = useLoginUserStore().loginUser;
 
   .content {
     margin-bottom: 16px;
-    background: linear-gradient(to right, #000, #123451);
+    background: linear-gradient(to right, #932132, #252525);
   }
 
   .footer {

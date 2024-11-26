@@ -1,13 +1,14 @@
 import { defineStore } from "pinia";
+import { USER } from "@/constant/UserRole";
 
 export const useLoginUserStore = defineStore("loginUser", {
   state: () => ({
     loginUser: {
-      userId: 1,
-      userRole: null,
+      userId: null,
+      userRole: 0,
       userAccount: "",
       userEmail: "",
-      userNickname: "李民才",
+      userNickname: "",
       userAvatarUrl: "",
       createTime: null,
     },

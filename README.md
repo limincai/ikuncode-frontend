@@ -14,6 +14,10 @@
     <img src="doc/coj 核心业务时序图.png"/>
 </div>
 
+## 后续更新计划
+
+- 美化样式（未完待续）
+
 ## Project setup
 
 ``` bash

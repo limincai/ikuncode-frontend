@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "animate.css": "^4.1.1",
     "core-js": "^3.8.3",
     "pinia": "^2.2.6",
     "pinia-plugin-persistedstate": "^4.1.3",
