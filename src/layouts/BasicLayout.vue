@@ -4,7 +4,6 @@
       <GlobalHeader />
     </a-layout-header>
     <a-layout-content class="content">
-      111 111 111
       <router-view />
     </a-layout-content>
     <a-layout-footer class="footer">
@@ -22,24 +21,25 @@ import { useLoginUserStore } from "@/stores/user";
 const loginUser = useLoginUserStore().loginUser;
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #basic-layout {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  margin: 0;
+
   .header {
-    margin-bottom: 16px;
+    flex: 1;
     box-shadow: #eee 3px 3px 3px;
   }
 
   .content {
-    margin-bottom: 16px;
-    background: linear-gradient(to right, #932132, #252525);
+    flex: 1;
+    min-height: 100vh;
+    padding: 0 100px;
   }
 
   .footer {
-    padding: 16px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     text-align: center;
   }
 }

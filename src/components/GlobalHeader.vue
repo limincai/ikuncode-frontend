@@ -1,7 +1,8 @@
 <template>
-  <a-row id="global-header" align="center">
+  <a-row id="global-header" :wrap="false" align="center">
+    <!--  左侧标题栏  -->
     <a-col flex="30%">
-      <a-row align="center" class="title-bar">
+      <a-row :wrap="false" align="center" class="title-bar">
         <a-col class="logo" flex="50%">
           <img alt="logo" class="logo" src="@/assets/logo.jpg" />
         </a-col>
@@ -10,6 +11,7 @@
         </a-col>
       </a-row>
     </a-col>
+    <!--  中间菜单栏  -->
     <a-col flex="auto">
       <a-menu
         :default-selected-keys="['/questions']"
@@ -21,16 +23,25 @@
           v-for="homeMenuRoute in filteredHomeMenuRoutes"
           :key="homeMenuRoute.path"
         >
+          <component :is="homeMenuRoute?.meta?.icon" />
           {{ homeMenuRoute.name }}
         </a-menu-item>
       </a-menu>
     </a-col>
+    <!-- 右侧用户头像 -->
     <a-col flex="10%">
-      <a-avatar v-if="!loginUser.userAvatarUrl" class="user-avatar">
-        登陆
+      <a-avatar
+        v-if="!loginUser.userAvatarUrl"
+        class="user-avatar"
+        @click="toLoginView()"
+      >
+        <div>登陆</div>
       </a-avatar>
-      <a-avatar v-else class="user-avatar">
-        <img :src="loginUser.userAvatarUrl || defaultUserAvatar" alt="avatar" />
+      <a-avatar v-else>
+        <img
+          :src="loginUser.userAvatarUrl || defaultUserAvatar"
+          alt="user-avatar"
+        />
       </a-avatar>
     </a-col>
   </a-row>
@@ -56,6 +67,11 @@ const selectedKey = ref(["/"]);
  */
 const filteredHomeMenuRoutes = computed(() =>
   HomeMenuRoutes.filter((homeMenuRoute) => {
+    // 不需要显示的路由项
+    if (homeMenuRoute?.meta?.disappear) {
+      return false;
+    }
+
     // 当前登陆用户权限
     const loginUserRole = loginUser.userRole;
 
@@ -65,6 +81,11 @@ const filteredHomeMenuRoutes = computed(() =>
     // 当前页面无需权限
     if (!requiredRole) {
       return true;
+    }
+
+    // 用户未登陆且需要权限
+    if (loginUserRole !== 0 && !loginUserRole) {
+      return false;
     }
 
     // 当前用户权限不足（数值越小权限越大）
@@ -87,11 +108,18 @@ const doMenuClick = (key) => {
     path: key
   });
 };
+
+/**
+ * 点击登陆按钮跳转到登陆页面
+ */
+const toLoginView = () => {
+  router.replace("/user/login");
+};
 </script>
 
 <style lang="scss" scoped>
-#global-header {
-  margin-bottom: 16px;
+.arco-icon {
+  margin: 0 !important;
 }
 
 .title-bar {

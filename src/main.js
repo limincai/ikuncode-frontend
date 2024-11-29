@@ -4,6 +4,8 @@ import router from "@/router";
 // arco-design
 import ArcoVue from "@arco-design/web-vue";
 import "@arco-design/web-vue/dist/arco.css";
+// 额外引入图标库
+import ArcoVueIcon from "@arco-design/web-vue/es/icon";
 // pinia
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
@@ -15,4 +17,4 @@ pinia.use(piniaPluginPersistedstate);
 
 const app = createApp(App);
 
-app.use(ArcoVue).use(pinia).use(router).mount("#app");
+app.use(ArcoVue).use(ArcoVueIcon).use(pinia).use(router).mount("#app");

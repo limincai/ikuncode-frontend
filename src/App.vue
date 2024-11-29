@@ -7,7 +7,6 @@
 <script lang="js" setup>
 import BasicLayout from "@/layouts/BasicLayout.vue";
 import { useRouter } from "vue-router";
-import routes from "@/router/routes";
 import { useLoginUserStore } from "@/stores/user";
 import { Message } from "@arco-design/web-vue";
 
@@ -25,7 +24,7 @@ router.beforeEach((to, from, next) => {
   const loginUserRole = loginUser.userRole;
 
   // 需要权限
-  const requiredRole = to.meta.requiredRole;
+  const requiredRole = to?.meta?.requiredRole;
 
   // 当前页面无需权限
   if (!requiredRole) {
