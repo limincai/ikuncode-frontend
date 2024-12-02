@@ -3,7 +3,7 @@
     <!-- 登陆页面 logo -->
     <a-card class="login-card" :bordered="true" :hoverable="true">
       <div class="login-header">
-        <img src="@/assets/logo.png" alt="kunkun" class="logo" />
+        <img :src="LOGO_URL" alt="kunkun" class="logo" @click="toHomeView()" />
         <h2 class="login-title">欢迎登陆</h2>
       </div>
       <!-- 用户登陆表单 -->
@@ -74,18 +74,18 @@
             size="large"
             class="login-btn"
             :disabled="!loginBtnEnabled"
-            @click="debouncedUserLogin()"
+            @click="throttledDoUserLogin()"
           >
             登录
           </a-button>
+          <!-- 图片验证码 -->
+          <img
+            class="captcha"
+            :src="captchaUrl"
+            alt="captcha"
+            @click="refreshCaptcha()"
+          />
         </a-form-item>
-        <!-- 图片验证码 -->
-        <img
-          :src="captchaUrl"
-          alt="captcha"
-          style="cursor: pointer"
-          @click="refreshCaptcha()"
-        />
       </a-form>
       <div class="footer-links">
         <a-link @click="toUserRegisterView()">没有账号？注册</a-link>
@@ -103,11 +103,12 @@ import {
   isLegalUserAccount,
   isLegalUserPassword,
 } from "@/utils/RegUtil";
-import { debounce } from "lodash-es";
+import { throttle } from "lodash-es";
 import { useLoginUserStore } from "@/stores/user";
 import { userLoginByPost } from "@/api/UserControllerApi";
 import { getCaptchaByGet } from "@/api/CaptchaControllerApi";
 import { Message } from "@arco-design/web-vue";
+import { LOGO_URL } from "@/constant/GlobalConstant";
 
 const router = useRouter();
 
@@ -130,13 +131,15 @@ const getCaptcha = async () => {
 // 页面加载时先获取 url
 onMounted(() => {
   // 如果用户存在，直接跳转到首页
-  if (loginUserStore.loginUser.userId) {
+  if (loginUserStore.loginUser?.userId) {
     router.push("/");
   }
   getCaptcha();
 });
 
-// 刷新验证码图片 url
+/**
+ * 刷新验证码 url
+ */
 const refreshCaptcha = () => {
   getCaptcha();
 };
@@ -159,10 +162,20 @@ const loginBtnEnabled = computed(() => {
 });
 
 /**
+ * 点击 logo 返回首页
+ */
+const toHomeView = () => {
+  router.push("/");
+};
+
+/**
  * 用户登陆
  */
 const doUserLogin = async () => {
   const res = await userLoginByPost(form);
+  if (!res) {
+    return;
+  }
   // 存入 user 到 store 中
   loginUserStore.setLoginUser(res);
   Message.success("登陆成功");
@@ -172,11 +185,11 @@ const doUserLogin = async () => {
 
 /**
  * 登陆按钮防抖
+ * 500ms 的节流时间
  */
-const debouncedUserLogin = debounce(() => {
-  // 设置 1 秒的防抖时间
+const throttledDoUserLogin = throttle(() => {
   doUserLogin();
-}, 1000);
+}, 500);
 
 /**
  * 跳转到注册页面
@@ -216,6 +229,7 @@ const toUserRegisterView = () => {
   .logo {
     width: 80px;
     margin-bottom: 10px;
+    cursor: pointer;
   }
 
   .login-title {
@@ -255,6 +269,12 @@ const toUserRegisterView = () => {
     color: #4a00e0;
     font-size: 14px;
     cursor: pointer;
+  }
+
+  .captcha {
+    cursor: pointer;
+    width: 100px;
+    margin-left: 20vh;
   }
 }
 </style>

@@ -11,3 +11,7 @@ export const userLoginByPost = (userDTO) => {
 export const getLoginUserVOByGet = () => {
   return AxiosClient.get("/user/get");
 };
+
+export const userRegisterByPost = (userDTO) => {
+  return AxiosClient.post("/user/register", userDTO);
+};

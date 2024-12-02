@@ -62,7 +62,7 @@ router.beforeEach((to, from, next) => {
   NProgress.start();
 
   // 当前登陆用户权限
-  const loginUserRole = loginUserStore.loginUser.userRole;
+  const loginUserRole = loginUserStore.loginUser?.userRole;
 
   // 需要权限
   const requiredRole = to?.meta?.requiredRole;
@@ -78,7 +78,7 @@ router.beforeEach((to, from, next) => {
   // 当前用户未登陆
   if (loginUserRole !== 0 && !loginUserRole) {
     Message.error("请先登陆");
-    router.replace("/login");
+    router.replace("/user/login");
     // 关闭进度条
     NProgress.done();
     return;

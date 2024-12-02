@@ -4,7 +4,7 @@
     <a-col flex="30%" @click="toHomeView()">
       <a-row :wrap="false" align="center" class="title-bar">
         <a-col class="logo" flex="10%">
-          <img alt="logo" class="logo" src="@/assets/logo.png" />
+          <img alt="logo" class="logo" :src="LOGO_URL" />
         </a-col>
         <a-col flex="auto">
           <div class="title">IkunCode坤码网</div>
@@ -41,7 +41,10 @@
       <!-- 用户未登陆显示用户头像 -->
       <a-dropdown trigger="hover" v-else>
         <a-avatar @click="toUserHomeView()">
-          <img :src="userAvatarUrl || defaultUserAvatar" alt="user-avatar" />
+          <img
+            :src="userAvatarUrl || DEFAULT_URSER_AVATAR_URL"
+            alt="user-avatar"
+          />
         </a-avatar>
         <template #content>
           <a-doption @click="toUserHomeView">
@@ -65,13 +68,11 @@ import { computed, ref } from "vue";
 import { useLoginUserStore } from "@/stores/user";
 import { userLogoutByPost } from "@/api/UserControllerApi";
 import { Message } from "@arco-design/web-vue";
+import { DEFAULT_URSER_AVATAR_URL, LOGO_URL } from "@/constant/GlobalConstant";
 
 const router = useRouter();
 
 const loginUserStore = useLoginUserStore();
-
-// 默认用户头像
-const defaultUserAvatar = require("@/assets/default-user-avatar.png");
 
 // 用户头像地址
 const userAvatarUrl = ref(loginUserStore.loginUser?.userAvatarUrl);

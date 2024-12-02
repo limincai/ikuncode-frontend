@@ -1,6 +1,8 @@
 import UserLayout from "@/layouts/UserLayout.vue";
-import UserLoginView from "@/views/user/UserLoginView.vue";
 import UserHomeView from "@/views/user/UserHomeView.vue";
+import UserRegisterView from "@/views/user/UserRegisterView.vue";
+import UserLoginView from "@/views/user/UserLoginView.vue";
+import UserRetrievePasswordView from "@/views/user/UserRetrievePasswordView.vue";
 
 const UserRoutes = [
   {
@@ -9,19 +11,19 @@ const UserRoutes = [
     component: UserLayout,
     children: [
       {
-        path: "/user/login",
+        path: "/user/register",
         name: "用户注册",
-        component: UserLoginView,
+        component: UserRegisterView,
       },
       {
         path: "/user/login",
         name: "用户登陆",
-        component: "",
+        component: UserLoginView,
       },
       {
         path: "/user/retrieve-password",
         name: "找回密码",
-        component: "",
+        component: UserRetrievePasswordView,
       },
       {
         path: "/user/:userId",
