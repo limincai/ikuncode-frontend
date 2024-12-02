@@ -1,6 +1,9 @@
-# coj 在线判题系统
+# 坤码网 ikuncode 在线判题系统
 
 > 作者：[limincai](https://github.com/limincai)
+
+swagger-codegen generate -i http://localhost:8888/v2/api-docs -l javascript -o src/api
+
 
 ## 技术选型
 

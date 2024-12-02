@@ -1,13 +1,13 @@
 <template>
   <a-row id="global-header" :wrap="false" align="center">
     <!--  左侧标题栏  -->
-    <a-col flex="30%">
+    <a-col flex="30%" @click="toHomeView()">
       <a-row :wrap="false" align="center" class="title-bar">
-        <a-col class="logo" flex="50%">
-          <img alt="logo" class="logo" src="@/assets/logo.jpg" />
+        <a-col class="logo" flex="10%">
+          <img alt="logo" class="logo" src="@/assets/logo.png" />
         </a-col>
         <a-col flex="auto">
-          <div class="title">COJ</div>
+          <div class="title">IkunCode坤码网</div>
         </a-col>
       </a-row>
     </a-col>
@@ -29,20 +29,31 @@
       </a-menu>
     </a-col>
     <!-- 右侧用户头像 -->
-    <a-col flex="10%">
+    <a-col flex="10%" class="user-avatar">
+      <!-- 用户未登陆显示登陆按钮 -->
       <a-avatar
-        v-if="!loginUser.userAvatarUrl"
+        v-if="!userAvatarUrl && !loginUserStore.loginUser?.userAccount"
         class="user-avatar"
         @click="toLoginView()"
       >
-        <div>登陆</div>
+        <div>未登陆</div>
       </a-avatar>
-      <a-avatar v-else>
-        <img
-          :src="loginUser.userAvatarUrl || defaultUserAvatar"
-          alt="user-avatar"
-        />
-      </a-avatar>
+      <!-- 用户未登陆显示用户头像 -->
+      <a-dropdown trigger="hover" v-else>
+        <a-avatar @click="toUserHomeView()">
+          <img :src="userAvatarUrl || defaultUserAvatar" alt="user-avatar" />
+        </a-avatar>
+        <template #content>
+          <a-doption @click="toUserHomeView">
+            <icon-user />
+            个人首页
+          </a-doption>
+          <a-doption @click="doUserLogout()" style="color: red">
+            <icon-export />
+            退出登陆
+          </a-doption>
+        </template>
+      </a-dropdown>
     </a-col>
   </a-row>
 </template>
@@ -52,30 +63,43 @@ import HomeMenuRoutes from "@/router/HomeMenuRoutes";
 import { useRouter } from "vue-router";
 import { computed, ref } from "vue";
 import { useLoginUserStore } from "@/stores/user";
+import { userLogoutByPost } from "@/api/UserControllerApi";
+import { Message } from "@arco-design/web-vue";
 
 const router = useRouter();
 
-const loginUser = useLoginUserStore().loginUser;
+const loginUserStore = useLoginUserStore();
 
+// 默认用户头像
 const defaultUserAvatar = require("@/assets/default-user-avatar.png");
+
+// 用户头像地址
+const userAvatarUrl = ref(loginUserStore.loginUser?.userAvatarUrl);
 
 // 默认选择的菜单为主页
 const selectedKey = ref(["/"]);
 
 /**
+ * 点击标题栏返回主页
+ */
+const toHomeView = () => {
+  router.push("/questions");
+};
+
+/**
  * 根据权限过滤主页菜单路由
  */
 const filteredHomeMenuRoutes = computed(() =>
-  HomeMenuRoutes.filter((homeMenuRoute) => {
+  HomeMenuRoutes[0].children.filter((homeMenuRoute) => {
     // 不需要显示的路由项
     if (homeMenuRoute?.meta?.disappear) {
       return false;
     }
 
-    // 当前登陆用户权限
-    const loginUserRole = loginUser.userRole;
+    // 当前登录用户的权限
+    const loginUserRole = loginUserStore.loginUser?.userRole;
 
-    // 需要权限
+    // 需要的权限
     const requiredRole = homeMenuRoute?.meta?.requiredRole;
 
     // 当前页面无需权限
@@ -115,25 +139,48 @@ const doMenuClick = (key) => {
 const toLoginView = () => {
   router.replace("/user/login");
 };
+
+/**
+ * 点击用户头像或者个人首页跳转到用户首页
+ *
+ */
+const toUserHomeView = () => {
+  router.push(`/user/${loginUserStore.loginUser.userId}`);
+};
+
+/**
+ * 用户注销
+ */
+const doUserLogout = async () => {
+  await userLogoutByPost();
+  Message.success("退出成功");
+  router.push("/questions");
+  // 清除用户信息
+  loginUserStore.clearLoginUser();
+};
 </script>
 
 <style lang="scss" scoped>
-.arco-icon {
-  margin: 0 !important;
-}
+#global-header {
+  .title-bar {
+    cursor: pointer;
+    padding-left: 25vh;
 
-.title-bar {
-  .logo {
-    padding-left: 80px;
+    .logo {
+      height: 45px;
+    }
+
+    .title {
+      color: #444;
+      margin-left: 16px;
+      font-family: "Exo 2", serif;
+      font-size: 1.5em;
+      font-weight: 600;
+    }
   }
 
-  .logo {
-    height: 64px;
-  }
-
-  .title {
-    color: #444;
-    margin-left: 16px;
+  a-avatar {
+    cursor: pointer;
   }
 }
 </style>

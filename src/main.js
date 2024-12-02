@@ -9,12 +9,15 @@ import ArcoVueIcon from "@arco-design/web-vue/es/icon";
 // pinia
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
-
+// axios
+import axios from "@/api/AxiosClient";
 // 创建 pinia 实例
 const pinia = createPinia();
 // 持久化插件
 pinia.use(piniaPluginPersistedstate);
 
 const app = createApp(App);
+
+app.config.globalProperties.$axios = axios;
 
 app.use(ArcoVue).use(ArcoVueIcon).use(pinia).use(router).mount("#app");

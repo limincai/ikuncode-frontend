@@ -1,11 +1,20 @@
 import HomeMenuRoutes from "@/router/HomeMenuRoutes";
-import UserMenuRoutes from "@/router/UserMenuRoutes";
-import LoginVue from "@/views/LoginView.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
+import UserRoutes from "@/router/UserRoutes";
 
 const routes = [
-  { path: "/user/login", name: "用户登录", component: LoginVue },
+  // / 直接跳转到问题页面
+  {
+    path: "/",
+    redirect: "/questions",
+  },
+  // 404 页面
+  {
+    path: "/:pathMatch(.*)*",
+    name: "当前页面不存在",
+    component: NotFoundView,
+  },
   ...HomeMenuRoutes,
-  ...UserMenuRoutes,
+  ...UserRoutes,
 ];
-
 export default routes;

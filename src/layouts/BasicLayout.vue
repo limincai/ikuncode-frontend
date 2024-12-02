@@ -1,42 +1,38 @@
 <template>
   <div id="basic-layout">
+    <!-- 头部导航栏 -->
     <a-layout-header class="header">
       <GlobalHeader />
     </a-layout-header>
+    <!-- 内容 -->
     <a-layout-content class="content">
       <router-view />
     </a-layout-content>
+    <!-- 页脚 -->
     <a-layout-footer class="footer">
       <GlobalFooter />
     </a-layout-footer>
-    {{ loginUser.userNickname }}
   </div>
 </template>
 
 <script lang="js" setup>
 import GlobalHeader from "@/components/GlobalHeader.vue";
 import GlobalFooter from "@/components/GlobalFooter.vue";
-import { useLoginUserStore } from "@/stores/user";
-
-const loginUser = useLoginUserStore().loginUser;
 </script>
 
 <style lang="scss">
 #basic-layout {
   display: flex;
-  min-height: 100vh;
   flex-direction: column;
   margin: 0;
 
   .header {
-    flex: 1;
     box-shadow: #eee 3px 3px 3px;
+    margin-bottom: 18px;
   }
 
   .content {
-    flex: 1;
-    min-height: 100vh;
-    padding: 0 100px;
+    min-height: 80vh;
   }
 
   .footer {
