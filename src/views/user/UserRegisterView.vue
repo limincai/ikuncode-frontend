@@ -154,7 +154,7 @@ import {
 } from "@/utils/RegUtil";
 import { Message } from "@arco-design/web-vue";
 import { LOGO_URL } from "@/constant/GlobalConstant";
-import { sendRegisterCaptchaByPost } from "@/api/EmailControllerApi";
+import { getRegisterCaptchaByPost } from "@/api/EmailControllerApi";
 import { userRegisterByPost } from "@/api/UserControllerApi";
 import { throttle } from "lodash-es";
 
@@ -234,18 +234,15 @@ const doEmailCaptchaSend = async () => {
   }
   // 开启倒计时
   startCountDown();
+  await getRegisterCaptchaByPost(form.userEmail);
   Message.success("发送验证码成功。");
-  await sendRegisterCaptchaByPost(form.userEmail);
 };
 
 /**
  * 用户注册
  */
 const doUserRegister = async () => {
-  const res = await userRegisterByPost(form);
-  if (!res) {
-    return;
-  }
+  await userRegisterByPost(form);
   Message.success("恭喜成为新黑子");
   // 成功注册返回登陆页
   router.push("/user/login");
@@ -265,7 +262,6 @@ const throttledDoUserRegister = throttle(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 95vh;
 
   /* 登录框样式 */
   .register-card {

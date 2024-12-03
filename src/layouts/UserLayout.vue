@@ -17,10 +17,12 @@ import GlobalFooter from "@/components/GlobalFooter.vue";
 #user-layout {
   display: flex;
   flex-direction: column;
-  background: #f0f2f5; /* 简洁的浅灰色背景 */
+  background: #f0f2f5;
 
   .content {
+    flex: 1;
     min-height: 80vh;
+    margin-bottom: 18px;
   }
 
   .footer {
