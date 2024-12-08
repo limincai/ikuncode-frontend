@@ -1,4 +1,4 @@
-import { ADMIN } from "@/constant/UserRole";
+import UserRole from "@/constant/UserRole";
 import QuestionsView from "@/views/question/QuestionsView.vue";
 import {
   IconCommand,
@@ -8,8 +8,13 @@ import {
   IconRobotAdd,
   IconUserGroup,
 } from "@arco-design/web-vue/es/icon";
-import AddQuestionView from "@/views/question/AddQuestionView.vue";
 import BasicLayout from "@/layouts/BasicLayout.vue";
+import CommunicationView from "@/views/question/CommunicationView.vue";
+import RankingView from "@/views/question/RankingView.vue";
+import QuestionSubmitStatusView from "@/views/question/QuestionSubmitStatusView.vue";
+import QuestionAddStepRoutes from "@/router/QuestionAddStepRoutes";
+import QuestionManagementView from "@/views/question/QuestionManagementView.vue";
+import QuestionAddVIew from "@/views/question/QuestionAddVIew.vue";
 
 const HomeMenuRoutes = [
   {
@@ -26,27 +31,28 @@ const HomeMenuRoutes = [
         },
       },
       {
-        path: "/add-question",
+        path: "/question/add",
         name: "添加题目",
-        component: AddQuestionView,
+        component: QuestionAddVIew,
         meta: {
           icon: IconRobotAdd,
-          requiredRole: ADMIN,
+          requiredRole: UserRole.ADMIN,
         },
+        children: QuestionAddStepRoutes,
       },
       {
-        path: "/manage-questions",
+        path: "/questions/manage",
         name: "管理题目",
-        component: "",
+        component: QuestionManagementView,
         meta: {
           icon: IconCommand,
-          requiredRole: ADMIN,
+          requiredRole: UserRole.ADMIN,
         },
       },
       {
         path: "/status",
         name: "状态",
-        component: "",
+        component: QuestionSubmitStatusView,
         meta: {
           icon: IconEdit,
         },
@@ -54,15 +60,15 @@ const HomeMenuRoutes = [
       {
         path: "/ranking",
         name: "排名",
-        component: "",
+        component: RankingView,
         meta: {
           icon: IconFire,
         },
       },
       {
-        path: "/communicate",
+        path: "/communication",
         name: "交流",
-        component: "",
+        component: CommunicationView,
         meta: {
           icon: IconUserGroup,
         },

@@ -3,7 +3,12 @@
     <!-- 注册页面 logo -->
     <a-card class="register-card" :bordered="true" :hoverable="true">
       <div class="register-header">
-        <img :src="LOGO_URL" alt="kunkun" class="logo" @click="toHomeView()" />
+        <img
+          :src="GlobalConstant.LOGO_URL"
+          alt="kunkun"
+          class="logo"
+          @click="toHomeView()"
+        />
         <h2 class="register-title">欢迎注册</h2>
       </div>
       <!-- 用户注册表单 -->
@@ -116,6 +121,7 @@
         </a-form-item>
         <!-- 登陆按钮和发送验证码按钮-->
         <a-form-item>
+          <!-- 登陆按钮-->
           <a-button
             type="primary"
             block
@@ -127,11 +133,13 @@
           >
             注册
           </a-button>
+          <!-- 发送验证码按钮-->
           <a-button
             type="primary"
             block
             size="large"
             class="send-captcha-btn"
+            :class="{ 'disabled-btn': !sendCaptchaBtnEnabled }"
             :disabled="!sendCaptchaBtnEnabled"
             @click="doEmailCaptchaSend()"
           >
@@ -153,9 +161,9 @@ import {
   isLegalUserPassword,
 } from "@/utils/RegUtil";
 import { Message } from "@arco-design/web-vue";
-import { LOGO_URL } from "@/constant/GlobalConstant";
-import { getRegisterCaptchaByPost } from "@/api/EmailControllerApi";
-import { userRegisterByPost } from "@/api/UserControllerApi";
+import GlobalConstant from "@/constant/GlobalConstant";
+import EmailControllerApi from "@/api/EmailControllerApi";
+import UserControllerApi from "@/api/UserControllerApi";
 import { throttle } from "lodash-es";
 
 const router = useRouter();
@@ -200,6 +208,8 @@ const startCountDown = () => {
       sendCaptchaBtnContent.value = `发送验证码`;
       // 设置发送验证码按钮可用
       sendCaptchaBtnEnabled.value = true;
+      // 重置计时器
+      countDown.value = 60;
     }
   }, 1000);
 };
@@ -229,23 +239,28 @@ const toHomeView = () => {
 const doEmailCaptchaSend = async () => {
   // 邮箱格式不正确，返回
   if (!isLegalUserEmail(form.userEmail)) {
-    Message.error("验证码格式不正确");
+    Message.error("邮箱格式不正确");
     return;
   }
   // 开启倒计时
   startCountDown();
-  await getRegisterCaptchaByPost(form.userEmail);
-  Message.success("发送验证码成功。");
+  const res = await EmailControllerApi.getRegisterCaptchaByPost(form.userEmail);
+  if (res !== undefined) {
+    Message.success("发送验证码成功。");
+  }
 };
 
 /**
  * 用户注册
  */
 const doUserRegister = async () => {
-  await userRegisterByPost(form);
+  const res = await UserControllerApi.userRegisterByPost(form);
+  if (res === undefined) {
+    return;
+  }
   Message.success("恭喜成为新黑子");
   // 成功注册返回登陆页
-  router.push("/user/login");
+  await router.push("/user/login");
 };
 
 /**

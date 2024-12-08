@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import GlobalFooter from "@/components/GlobalFooter.vue";
+import GlobalFooter from "@/components/common/GlobalFooter.vue";
 </script>
 
 <style lang="scss">
@@ -22,7 +22,7 @@ import GlobalFooter from "@/components/GlobalFooter.vue";
   .content {
     flex: 1;
     min-height: 80vh;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
   }
 
   .footer {

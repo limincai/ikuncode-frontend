@@ -9,7 +9,7 @@ import { useRouter } from "vue-router";
 import { Message } from "@arco-design/web-vue";
 import NProgress from "nprogress";
 import { onMounted } from "vue";
-import { useLoginUserStore } from "@/stores/user";
+import { useLoginUserStore } from "@/stores/loginUser";
 
 const router = useRouter();
 
@@ -78,7 +78,7 @@ router.beforeEach((to, from, next) => {
   // 当前用户未登陆
   if (loginUserRole !== 0 && !loginUserRole) {
     Message.error("请先登陆");
-    router.replace("/user/login");
+    router.push("/user/login");
     // 关闭进度条
     NProgress.done();
     return;
@@ -91,6 +91,9 @@ router.beforeEach((to, from, next) => {
     NProgress.done();
     router.replace(from.path);
   }
+
+  // 鉴权完成，前进
+  next();
 
   // 关闭进度条
   NProgress.done();
@@ -110,5 +113,10 @@ router.beforeEach((to, from, next) => {
 // 头像
 .arco-avatar {
   cursor: pointer;
+}
+
+// 不可用的按钮
+.disabled-btn {
+  background-color: gray !important;
 }
 </style>

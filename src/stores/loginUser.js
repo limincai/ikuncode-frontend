@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getLoginUserVOByGet } from "@/api/UserControllerApi";
+import UserControllerApi from "@/api/UserControllerApi";
 
 // 设置过期时间为 1 小时
 const EXPIRY_TIME = 60 * 60 * 1000;
@@ -10,6 +10,7 @@ export const useLoginUserStore = defineStore("loginUser", {
       userId: null,
       userRole: null,
       userAccount: "",
+      userProfile: "",
       userEmail: "",
       userNickname: "",
       userAvatarUrl: "",
@@ -45,7 +46,7 @@ export const useLoginUserStore = defineStore("loginUser", {
       }
 
       // 获取用户信息
-      const res = await getLoginUserVOByGet();
+      const res = await UserControllerApi.getLoginUserVOByGet();
 
       // 当前会话用户存在，直接存入 store 中
       if (res) {
@@ -86,6 +87,6 @@ export const useLoginUserStore = defineStore("loginUser", {
         storage: localStorage,
       },
     ],
-    paths: ["loginUser", "lastGetTime"],
+    paths: ["loginUser", "lastGetTime", "getFlag"],
   },
 });

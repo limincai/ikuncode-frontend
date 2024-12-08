@@ -3,7 +3,12 @@
     <!-- 找回密码页面 logo -->
     <a-card class="retrieve-password-card" :bordered="true" :hoverable="true">
       <div class="retrieve-password-header">
-        <img :src="LOGO_URL" alt="kunkun" class="logo" @click="toHomeView()" />
+        <img
+          :src="GlobalConstant.LOGO_URL"
+          alt="kunkun"
+          class="logo"
+          @click="toHomeView()"
+        />
         <h2 class="retrieve-password-title">找回密码</h2>
       </div>
       <!-- 用户找回密码表单 -->
@@ -96,6 +101,7 @@
         </a-form-item>
         <!-- 修改密码按钮和发送验证码按钮-->
         <a-form-item>
+          <!-- 修改密码按钮-->
           <a-button
             type="primary"
             block
@@ -107,11 +113,13 @@
           >
             修改密码
           </a-button>
+          <!-- 发送验证码按钮-->
           <a-button
             type="primary"
             block
             size="large"
             class="send-captcha-btn"
+            :class="{ 'disabled-btn': !sendCaptchaBtnEnabled }"
             :disabled="!sendCaptchaBtnEnabled"
             @click="doEmailCaptchaSend()"
           >
@@ -132,9 +140,9 @@ import {
   isLegalUserPassword,
 } from "@/utils/RegUtil";
 import { Message } from "@arco-design/web-vue";
-import { LOGO_URL } from "@/constant/GlobalConstant";
-import { getRetrievePasswordCaptchaByPost } from "@/api/EmailControllerApi";
-import { userRetrievePassword } from "@/api/UserControllerApi";
+import GlobalConstant from "@/constant/GlobalConstant";
+import EmailControllerApi from "@/api/EmailControllerApi";
+import UserControllerApi from "@/api/UserControllerApi";
 import { throttle } from "lodash-es";
 
 const router = useRouter();
@@ -178,6 +186,8 @@ const startCountDown = () => {
       sendCaptchaBtnContent.value = `发送验证码`;
       // 设置发送验证码按钮可用
       sendCaptchaBtnEnabled.value = true;
+      // 重置计时器
+      countDown.value = 60;
     }
   }, 1000);
 };
@@ -211,18 +221,25 @@ const doEmailCaptchaSend = async () => {
   }
   // 开启倒计时
   startCountDown();
-  await getRetrievePasswordCaptchaByPost(form.userEmail);
-  Message.success("发送验证码成功");
+  const res = await EmailControllerApi.getRetrievePasswordCaptchaByPost(
+    form.userEmail
+  );
+  if (res !== undefined) {
+    Message.success("发送验证码成功。");
+  }
 };
 
 /**
  * 用户找回密码
  */
 const doUserRetrievePassword = async () => {
-  await userRetrievePassword(form);
+  const res = await UserControllerApi.userRetrievePassword(form);
+  if (res === undefined) {
+    return;
+  }
   Message.success("修改密码成功");
   // 成功找回密码返回登陆页
-  router.push("/user/login");
+  await router.push("/user/login");
 };
 
 /**

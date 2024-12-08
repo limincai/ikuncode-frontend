@@ -1,33 +1,42 @@
+/* 用户接口 */
 import AxiosClient from "@/api/AxiosClient";
 
-/**
- * 用户退出登陆
- */
-export const userLogoutByPost = () => {
-  return AxiosClient.post("/user/logout");
-};
+export default {
+  userLogoutByPost: () => {
+    /**
+     * 用户退出登陆
+     */
+    return AxiosClient.post("/user/logout");
+  },
 
-/**
- * 用户登陆
- */
-export const userLoginByPost = (userDTO) => {
-  return AxiosClient.post("/user/login", userDTO);
-};
+  /**
+   * 用户登陆
+   */
+  userLoginByPost: (userLoginRequest) => {
+    return AxiosClient.post("/user/login", userLoginRequest);
+  },
 
-/**
- * 获取登陆用户状态
- */
-export const getLoginUserVOByGet = () => {
-  return AxiosClient.get("/user/get");
-};
+  /**
+   * 获取登陆用户状态
+   */
+  getLoginUserVOByGet: () => {
+    return AxiosClient.get("/user/get");
+  },
 
-/**
- * 用户注册
- */
-export const userRegisterByPost = (userDTO) => {
-  return AxiosClient.post("/user/register", userDTO);
-};
+  /**
+   * 用户注册
+   */
+  userRegisterByPost: (userRegisterRequest) => {
+    return AxiosClient.post("/user/register", userRegisterRequest);
+  },
 
-export const userRetrievePassword = (userDTO) => {
-  return AxiosClient.post("/user/retrieve-password", userDTO);
+  /**
+   * 用户找回密码
+   */
+  userRetrievePassword: (userRetrievePasswordRequest) => {
+    return AxiosClient.post(
+      "/user/retrieve-password",
+      userRetrievePasswordRequest
+    );
+  },
 };

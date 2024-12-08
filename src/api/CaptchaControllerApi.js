@@ -1,5 +1,11 @@
+/* 验证码接口 */
 import AxiosClient from "@/api/AxiosClient";
 
-export const getCaptchaByGet = () => {
-  return AxiosClient.get("/captcha/get");
+export default {
+  /**
+   * 获取登陆图片验证码
+   */
+  getCaptchaByGet: () => {
+    return AxiosClient.get("/captcha/get");
+  },
 };

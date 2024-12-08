@@ -3,7 +3,12 @@
     <!-- 登陆页面 logo -->
     <a-card class="login-card" :bordered="true" :hoverable="true">
       <div class="login-header">
-        <img :src="LOGO_URL" alt="kunkun" class="logo" @click="toHomeView()" />
+        <img
+          :src="GlobalConstant.LOGO_URL"
+          alt="kunkun"
+          class="logo"
+          @click="toHomeView()"
+        />
         <h2 class="login-title">欢迎登陆</h2>
       </div>
       <!-- 用户登陆表单 -->
@@ -65,8 +70,9 @@
             style="width: 300px"
           />
         </a-form-item>
-        <!-- 登陆按钮 -->
+        <!-- 登陆按钮和图片验证码 -->
         <a-form-item>
+          <!-- 登陆按钮 -->
           <a-button
             type="primary"
             block
@@ -104,11 +110,11 @@ import {
   isLegalUserPassword,
 } from "@/utils/RegUtil";
 import { throttle } from "lodash-es";
-import { useLoginUserStore } from "@/stores/user";
-import { userLoginByPost } from "@/api/UserControllerApi";
-import { getCaptchaByGet } from "@/api/CaptchaControllerApi";
+import { useLoginUserStore } from "@/stores/loginUser";
+import UserControllerApi from "@/api/UserControllerApi";
+import CaptchaControllerApi from "@/api/CaptchaControllerApi";
 import { Message } from "@arco-design/web-vue";
-import { LOGO_URL } from "@/constant/GlobalConstant";
+import GlobalConstant from "@/constant/GlobalConstant";
 
 const router = useRouter();
 
@@ -122,9 +128,9 @@ const captchaKey = ref("");
 
 // 获取验证码图片 url
 const getCaptcha = async () => {
-  const res = await getCaptchaByGet();
-  captchaUrl.value = res.captchaUrl;
-  captchaKey.value = res.captchaKey;
+  const res = await CaptchaControllerApi.getCaptchaByGet();
+  captchaUrl.value = res?.captchaUrl || "";
+  captchaKey.value = res?.captchaKey || "";
   form.captchaKey = captchaKey.value;
 };
 
@@ -172,7 +178,7 @@ const toHomeView = () => {
  * 用户登陆
  */
 const doUserLogin = async () => {
-  const res = await userLoginByPost(form);
+  const res = await UserControllerApi.userLoginByPost(form);
   if (!res) {
     return;
   }
