@@ -1,5 +1,5 @@
 import UserRole from "@/constant/UserRole";
-import QuestionsView from "@/views/question/QuestionsView.vue";
+import QuestionListView from "@/views/question/QuestionListView.vue";
 import {
   IconCommand,
   IconEdit,
@@ -14,7 +14,7 @@ import RankingView from "@/views/question/RankingView.vue";
 import QuestionSubmitStatusView from "@/views/question/QuestionSubmitStatusView.vue";
 import QuestionAddStepRoutes from "@/router/QuestionAddStepRoutes";
 import QuestionManagementView from "@/views/question/QuestionManagementView.vue";
-import QuestionAddVIew from "@/views/question/QuestionAddVIew.vue";
+import QuestionAddVIew from "@/views/question/QuestionAddView.vue";
 
 const HomeMenuRoutes = [
   {
@@ -25,7 +25,7 @@ const HomeMenuRoutes = [
       {
         path: "/questions",
         name: "题目",
-        component: QuestionsView,
+        component: QuestionListView,
         meta: {
           icon: IconList,
         },

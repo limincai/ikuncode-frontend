@@ -6,6 +6,7 @@
       @change="props.handleChange"
       :locale="zhHans"
       :uploadImages="uploadImage"
+      :placeholder="props.placeholder"
     />
   </div>
 </template>
@@ -55,6 +56,10 @@ const plugins = [
  */
 const props = defineProps({
   value: {
+    type: String,
+    default: "",
+  },
+  placeholder: {
     type: String,
     default: "",
   },

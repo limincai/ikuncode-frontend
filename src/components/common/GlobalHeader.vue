@@ -64,8 +64,8 @@
 
 <script lang="js" setup>
 import HomeMenuRoutes from "@/router/HomeMenuRoutes";
-import { useRouter } from "vue-router";
-import { computed, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { computed, ref, watch } from "vue";
 import { useLoginUserStore } from "@/stores/loginUser";
 import UserControllerApi from "@/api/UserControllerApi";
 import { Message } from "@arco-design/web-vue";
@@ -73,6 +73,8 @@ import GlobalConstant from "@/constant/GlobalConstant";
 import { useGlobalHeaderSelectedKey } from "@/stores/globalHeaderSelectedKey";
 
 const router = useRouter();
+
+const route = useRoute();
 
 const loginUserStore = useLoginUserStore();
 
@@ -86,11 +88,19 @@ const selectedKey = computed(() => {
   return globalHeaderSelectedKey.getSelectedKey();
 });
 
+// 监听路由变化，动态更新菜单的 selectedKey
+watch(
+  () => route.path,
+  (newPath) => {
+    globalHeaderSelectedKey.setSelectedKey(newPath);
+  },
+  { immediate: true } // 在组件挂载时立即触发一次
+);
+
 /**
  * 点击标题栏返回主页
  */
 const toHomeView = () => {
-  globalHeaderSelectedKey.setSelectedKey("/questions");
   router.push("/questions");
 };
 
@@ -124,7 +134,6 @@ const filteredHomeMenuRoutes = computed(() =>
  * 菜单点击跳转到相应页面
  */
 const doMenuClick = (key) => {
-  globalHeaderSelectedKey.setSelectedKey(key);
   router.push({
     path: key
   });
