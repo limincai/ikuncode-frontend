@@ -183,10 +183,10 @@ const doUserLogin = async () => {
     return;
   }
   // 存入 user 到 store 中
-  loginUserStore.setLoginUser(res);
+  Object.assign(loginUserStore.loginUser, res);
   Message.success("登陆成功");
   // 跳转到首页
-  router.push("/");
+  await router.push("/");
 };
 
 /**

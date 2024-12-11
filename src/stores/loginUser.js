@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 import UserControllerApi from "@/api/UserControllerApi";
+import { reactive } from "vue";
 
 // 设置过期时间为 1 小时
 const EXPIRY_TIME = 60 * 60 * 1000;
 
-export const useLoginUserStore = defineStore("loginUser", {
+export const useLoginUserStore1 = defineStore("loginUser", {
   state: () => ({
     loginUser: {
       userId: null,
@@ -90,3 +91,62 @@ export const useLoginUserStore = defineStore("loginUser", {
     paths: ["loginUser", "lastGetTime", "getFlag"],
   },
 });
+
+export const useLoginUserStore = defineStore(
+  "loginUser",
+  () => {
+    /**
+     * 当前登陆用户
+     */
+    const loginUser = reactive({
+      userId: null,
+      userRole: null,
+      userAccount: "",
+      userProfile: "",
+      userEmail: "",
+      userNickname: "",
+      userAvatarUrl: "",
+      createTime: null,
+    });
+
+    /**
+     * 获取登陆用户
+     */
+    const fetchLoginUser = async () => {
+      const res = await UserControllerApi.getLoginUserVOByGet();
+      // 更新用户信息
+      Object.assign(loginUser, res);
+    };
+
+    /**
+     * 清除当前用户登陆态,重新赋值
+     */
+    const clearLoginUser = () => {
+      loginUser.userId = null;
+      loginUser.userRole = null;
+      loginUser.userAccount = "";
+      loginUser.userProfile = "";
+      loginUser.userEmail = "";
+      loginUser.userNickname = "";
+      loginUser.userAvatarUrl = "";
+      loginUser.createTime = null;
+    };
+
+    return {
+      loginUser,
+      fetchLoginUser,
+      clearLoginUser,
+    };
+  },
+  {
+    persist: {
+      enabled: true, // 开启持久化
+      strategies: [
+        {
+          key: "user-login-state",
+          storage: localStorage,
+        },
+      ],
+    },
+  }
+);

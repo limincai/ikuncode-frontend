@@ -8,7 +8,7 @@
     >
       <!-- 时间限制 -->
       <a-form-item
-        field="questionTitle"
+        field="timeLimit"
         label="时间限制"
         tooltip="请输入时间限制（非必填项），单位为 ms"
       >
@@ -22,7 +22,7 @@
       </a-form-item>
       <!-- 内存限制 -->
       <a-form-item
-        field="questionTitle"
+        field="memoryLimit"
         label="内存限制"
         tooltip="请输入内存限制（非必填项），单位为 kb"
       >

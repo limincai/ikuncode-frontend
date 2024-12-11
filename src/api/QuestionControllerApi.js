@@ -34,4 +34,17 @@ export default {
     const url = `/question/${questionId}`;
     return AxiosClient.get(url);
   },
+  /**
+   * 根据 id 获取题目 AdminVO
+   */
+  questionGetByAdminByIdByGet: (questionId) => {
+    const url = `/question/${questionId}/admin`;
+    return AxiosClient.get(url);
+  },
+  /**
+   * 题目更新
+   */
+  questionUpdateByPost: (questionUpdateRequest) => {
+    return AxiosClient.post("/question/update", questionUpdateRequest);
+  },
 };

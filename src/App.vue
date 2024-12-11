@@ -46,7 +46,7 @@ const doInit = () => {
     "              *##%%%        %@@@%%#               \n" +
     "              =##%%%        =%@@@@                \n" +
     "              =#%%%*        #%@@@%                ");
-  loginUserStore.getLoginUser();
+  loginUserStore.fetchLoginUser();
 };
 
 onMounted(() => {

@@ -65,7 +65,9 @@ const questionAddRequest = useQuestionAddRequestStore().questionAddRequest;
 
 const router = useRouter();
 
-// 获取当前步骤对应的组件
+/**
+ * 获取当前步骤对应的组件
+ */
 const currentComponent = computed(() => {
   return QuestionAddStepRoutes[current.value - 1].component;
 });
