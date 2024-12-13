@@ -3,6 +3,7 @@ import UserHomeView from "@/views/user/UserHomeView.vue";
 import UserRegisterView from "@/views/user/UserRegisterView.vue";
 import UserLoginView from "@/views/user/UserLoginView.vue";
 import UserRetrievePasswordView from "@/views/user/UserRetrievePasswordView.vue";
+import UserRole from "@/constant/UserRole";
 
 const UserRoutes = [
   {
@@ -29,6 +30,9 @@ const UserRoutes = [
         path: "/user/:userId",
         name: "用户首页",
         component: UserHomeView,
+        meta: {
+          requiredRole: UserRole.USER,
+        },
       },
     ],
   },

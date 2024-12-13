@@ -17,32 +17,36 @@
       <a-form :model="form" label-col="8" wrapper-col="16">
         <!-- 账号 -->
         <a-form-item field="userAccount" label="账号">
-          <a-input v-model="form.userAccount" class="readonly-field" readonly />
+          <a-input v-model="form.userAccount" class="readonly-field" disabled />
         </a-form-item>
         <!-- 邮箱 -->
         <a-form-item field="userEmail" label="注册邮箱">
-          <a-input v-model="form.userEmail" class="readonly-field" readonly />
+          <a-input v-model="form.userEmail" class="readonly-field" disabled />
         </a-form-item>
         <!-- 昵称 -->
         <a-form-item field="userNickName" label="用户昵称">
           <a-input
             v-model="form.userNickname"
-            :class="computedClass"
-            :readonly="route.params.userId !== loginUser.userId"
+            class="input-field"
+            :disabled="route.params.userId !== loginUser.userId"
           />
         </a-form-item>
         <!-- 简介 -->
         <a-form-item field="userProfile" label="用户简介">
-          <a-input
+          <a-textarea
             v-model="form.userProfile"
             class="input-field"
-            :class="computedClass"
-            :readonly="route.params.userId !== loginUser.userId"
+            :disabled="route.params.userId !== loginUser.userId"
+            placeholder="这个人什么也没留下"
+            :max-length="50"
+            show-word-limit
+            allow-clear
+            :auto-size="{ minRows: 2 }"
           />
         </a-form-item>
         <!-- 创建时间 -->
         <a-form-item field="createTime" label="创建时间">
-          <a-input v-model="form.createTime" class="readonly-field" readonly />
+          <a-input v-model="form.createTime" class="readonly-field" disabled />
         </a-form-item>
         <!-- 用户鸡脚数量 -->
         <a-form-item
@@ -50,7 +54,7 @@
           label="鸡脚数量"
           tooltip="鸡脚数可通过做题和帖子被点赞获取哦！加油吧，小黑子"
         >
-          <a-input v-model="form.userJijiao" class="readonly-field" readonly />
+          <a-input v-model="form.userJijiao" class="readonly-field" disabled />
         </a-form-item>
         <!-- 确认修改按钮和返回按钮-->
         <a-form-item>
@@ -80,27 +84,25 @@
       </a-form>
     </a-card>
     <!-- 上传头像模态框 -->
-    <div v-if="route.params.userId === loginUser.userId" class="modal-content">
-      <a-modal
-        v-if="route.params.userId === loginUser.userId"
-        v-model:visible="isModalVisible"
-        title="上传头像"
-        @cancel="handleCancel"
+    <a-modal
+      v-if="route.params.userId === loginUser.userId"
+      v-model:visible="isModalVisible"
+      title="上传头像"
+      ok-text="取消"
+      :hide-cancel="true"
+      :simple="true"
+      modal-class="modal-content"
+    >
+      <a-upload
+        :multiple="false"
+        :custom-request="handleUpload"
+        :show-file-list="false"
+        accept="image/*"
       >
-        <a-upload
-          @before-upload="handleBeforeUpload"
-          :custom-request="updateUserAvatar"
-          :max-size="5 * 1024 * 1024"
-          accept="image/*"
-          :show-file-list="false"
-        >
-          <a-button icon="upload" type="primary" size="large"
-            >点击上传头像
-          </a-button>
-        </a-upload>
-        <p class="upload-hint">支持 JPG/PNG 格式，大小不超过 5MB。</p>
-      </a-modal>
-    </div>
+        <a-button type="primary" icon="upload">选择头像</a-button>
+      </a-upload>
+      <p class="upload-hint">支持 JPG/PNG 格式，大小不超过 5MB。</p>
+    </a-modal>
   </div>
 </template>
 
@@ -111,10 +113,13 @@ import GlobalConstant from "@/constant/GlobalConstant";
 import { useLoginUserStore } from "@/stores/loginUser";
 import { Message } from "@arco-design/web-vue";
 import UserControllerApi from "@/api/UserControllerApi";
+import FileControllerApi from "@/api/FileControllerApi";
 
 const route = useRoute();
 const router = useRouter();
 const loginUser = useLoginUserStore().loginUser;
+
+const file = ref();
 
 // 用户首页表单模型
 const form = reactive({
@@ -126,16 +131,10 @@ const form = reactive({
   userJijiao: 0,
 });
 
-// 头像上传模态框的显示控制
+/**
+ * 头像上传模态框的显示控制
+ */
 const isModalVisible = ref(false);
-
-// 计算类，当只有是自己时才能修改
-const computedClass = computed(() => {
-  return {
-    "input-field": route.params.userId === loginUser.userId,
-    "readonly-field": route.params.userId !== loginUser.userId,
-  };
-});
 
 onMounted(() => {
   Object.assign(form, loginUser);
@@ -159,17 +158,10 @@ const showUploadModal = () => {
 };
 
 /**
- * 更新用户头像模态框取消
- */
-const handleCancel = () => {
-  isModalVisible.value = false;
-};
-
-/**
  * 更新用户
  */
-const doUserUpdate = () => {
-  const res = UserControllerApi.userUpdateByPost(form);
+const doUserUpdate = async () => {
+  const res = await UserControllerApi.userUpdateByPost(form);
   if (!res) {
     Message.error("用户更新失败");
   }
@@ -179,22 +171,20 @@ const doUserUpdate = () => {
 };
 
 /**
- * 头像上传前处理
+ * 用户上传头像
  */
-const handleBeforeUpload = (file) => {
-  if (file.size >= 5 * 1024 * 1024) {
-    Message.error("文件过大，请重新上传");
-    return false;
-  }
-  return true;
-};
+const handleUpload = async ({ fileItem }) => {
+  const formData = new FormData();
+  formData.append("file", fileItem.file);
 
-/**
- * 上传头像
- */
-const updateUserAvatar = (options) => {
-  // todo 上传头像
-  const { file, onSuccess, onError } = options;
+  const res = await FileControllerApi.uploadUserAvatarByPost(formData);
+  if (!res) {
+    Message.error("文件上传失败");
+    return;
+  }
+  // 更新用户头像 URL
+  loginUser.userAvatarUrl = res;
+  isModalVisible.value = false;
   Message.success("头像上传成功");
 };
 </script>
@@ -239,7 +229,7 @@ const updateUserAvatar = (options) => {
   /* 只读字段样式 */
   .readonly-field {
     background-color: #f5f5f5 !important;
-    color: #000;
+    color: #000 !important;
     cursor: not-allowed;
     border-radius: 10px;
   }
@@ -260,6 +250,12 @@ const updateUserAvatar = (options) => {
 
   .update-button:hover {
     background-color: #8e2de2;
+  }
+
+  .modal-content {
+    display: flex;
+    align-items: center;
+    justify-items: center;
   }
 }
 </style>

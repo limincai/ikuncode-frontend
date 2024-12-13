@@ -11,9 +11,6 @@ NProgress.configure({ showSpinner: false }); // 隐藏加载图标
 // 创建 axios 实例
 const AxiosClient = axios.create({
   baseURL: GlobalConstant.AXIOS_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
   withCredentials: true,
 });
 
