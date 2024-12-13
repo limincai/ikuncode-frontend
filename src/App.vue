@@ -101,10 +101,6 @@ router.beforeEach((to, from, next) => {
 </script>
 
 <style lang="scss">
-.arco-link {
-  background: none !important;
-}
-
 // 图标
 .arco-icon {
   margin: 0 !important;

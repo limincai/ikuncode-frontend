@@ -1,9 +1,9 @@
 <template>
   <div id="global-footer">
-    © 2024 COJ 版权所有 | powered by
+    © 2024 IkunCode 版权所有 | powered by
     <a-link :href="GlobalConstant.GITHUB_URL" icon target="_blank">
-      limincai</a-link
-    >
+      limincai
+    </a-link>
   </div>
 </template>
 

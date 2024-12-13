@@ -15,13 +15,23 @@
     >
       <!-- 题目标签 -->
       <template #questionTags="{ record }">
-        <a-tag v-for="(tag, index) in record.questionTags" :key="index">
-          {{ tag }}
-        </a-tag>
+        <a-space wrap>
+          <a-tag
+            v-for="(tag, index) in record.questionTags"
+            :key="index"
+            color="blue"
+          >
+            {{ tag }}
+          </a-tag>
+        </a-space>
       </template>
       <!-- 创建时间 -->
       <template #createTime="{ record }">
         {{ formatDate(record.createTime) }}
+      </template>
+      <!-- 题目描述（带省略号） -->
+      <template #questionDescription="{ record }">
+        <div class="question-description">{{ record.questionDescription }}</div>
       </template>
       <!-- 操作 -->
       <template #optional="{ record }">
@@ -97,7 +107,7 @@ const columns = [
   },
   {
     title: "题目描述",
-    dataIndex: "questionDescription",
+    slotName: "questionDescription",
     align: "center",
   },
   {
@@ -156,4 +166,13 @@ const toQuestionUpdateView = (record) => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#question-management-view {
+  .question-description {
+    white-space: nowrap; /* 不换行 */
+    overflow: hidden; /* 超出部分隐藏 */
+    text-overflow: ellipsis; /* 超出部分显示为省略号 */
+    max-width: 150px;
+  }
+}
+</style>

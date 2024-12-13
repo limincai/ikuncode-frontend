@@ -19,4 +19,10 @@ pinia.use(piniaPluginPersistedstate);
 
 const app = createApp(App);
 
+// 全局错误处理
+app.config.errorHandler = (err, vm, info) => {
+  console.error("Vue 捕获到错误:", err, info);
+  // 可以在这里弹出友好的提示或者将错误信息记录到后台
+};
+
 app.use(ArcoVue).use(ArcoVueIcon).use(pinia).use(router).mount("#app");

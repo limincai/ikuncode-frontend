@@ -33,10 +33,17 @@ export default {
   /**
    * 用户找回密码
    */
-  userRetrievePassword: (userRetrievePasswordRequest) => {
+  userRetrievePasswordByPost: (userRetrievePasswordRequest) => {
     return AxiosClient.post(
       "/user/retrieve-password",
       userRetrievePasswordRequest
     );
+  },
+
+  /**
+   * 用户更新
+   */
+  userUpdateByPost: (userUpdateRequest) => {
+    return AxiosClient.post("/user/update", userUpdateRequest);
   },
 };

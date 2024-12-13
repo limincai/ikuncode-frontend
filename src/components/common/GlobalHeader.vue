@@ -92,6 +92,15 @@ const selectedKey = computed(() => {
 watch(
   () => route.path,
   (newPath) => {
+    // 题目更新页面不改变
+    if (newPath === ("/question/update")) {
+      return;
+    }
+    // 做题页面不改变
+    const regex = /^\/question\/(\d+)$/;
+    if (newPath.match(regex)) {
+      return;
+    }
     globalHeaderSelectedKey.setSelectedKey(newPath);
   },
   { immediate: true } // 在组件挂载时立即触发一次
@@ -114,6 +123,11 @@ const filteredHomeMenuRoutes = computed(() =>
 
     // 需要的权限
     const requiredRole = homeMenuRoute?.meta?.requiredRole;
+
+    // 不需要在页面上展示
+    if (homeMenuRoute?.meta?.hidden) {
+      return false;
+    }
 
     // 当前页面无需权限
     if (!requiredRole) {

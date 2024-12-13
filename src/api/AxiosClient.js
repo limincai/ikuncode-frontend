@@ -4,17 +4,9 @@ import { Message } from "@arco-design/web-vue";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import GlobalConstant from "@/constant/GlobalConstant";
-import router from "@/router";
 
 // 配置 nprogress
 NProgress.configure({ showSpinner: false }); // 隐藏加载图标
-
-// 网路错误处理
-const doNetConnectError = () => {
-  // 进入网络错误页面
-  Message.error("网络连接错误");
-  router.push("/net-error");
-};
 
 // 创建 axios 实例
 const AxiosClient = axios.create({
@@ -35,8 +27,6 @@ AxiosClient.interceptors.request.use(
   (error) => {
     // 请求错误时关闭进度条
     NProgress.done();
-    // 处理网络错误
-    doNetConnectError();
     return Promise.reject(error);
   }
 );
@@ -58,8 +48,6 @@ AxiosClient.interceptors.response.use(
   (error) => {
     // 响应错误时关闭进度条
     NProgress.done();
-    // 处理网络错误
-    doNetConnectError();
     return Promise.reject(error);
   }
 );

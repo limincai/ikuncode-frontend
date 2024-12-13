@@ -233,7 +233,7 @@ const doEmailCaptchaSend = async () => {
  * 用户找回密码
  */
 const doUserRetrievePassword = async () => {
-  const res = await UserControllerApi.userRetrievePassword(form);
+  const res = await UserControllerApi.userRetrievePasswordByPost(form);
   if (res === undefined) {
     return;
   }

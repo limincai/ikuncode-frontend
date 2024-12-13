@@ -15,6 +15,8 @@ import QuestionSubmitStatusView from "@/views/question/QuestionSubmitStatusView.
 import QuestionAddStepRoutes from "@/router/QuestionAddStepRoutes";
 import QuestionManagementView from "@/views/question/QuestionManagementView.vue";
 import QuestionAddVIew from "@/views/question/QuestionAddView.vue";
+import QuestionUpdateView from "@/views/question/QuestionUpdateView.vue";
+import QuestionView from "@/views/question/QuestionView.vue";
 
 const HomeMenuRoutes = [
   {
@@ -47,6 +49,26 @@ const HomeMenuRoutes = [
         meta: {
           icon: IconCommand,
           requiredRole: UserRole.ADMIN,
+        },
+      },
+      // 题目更新页面
+      {
+        path: "/question/update",
+        name: "题目更新",
+        component: QuestionUpdateView,
+        meta: {
+          requiredRole: UserRole.ADMIN,
+          hidden: true,
+        },
+      },
+      // 题目页面
+      {
+        path: "/question/:questionId",
+        name: "题目页面",
+        component: QuestionView,
+        meta: {
+          requiredRole: UserRole.USER,
+          hidden: true,
         },
       },
       {

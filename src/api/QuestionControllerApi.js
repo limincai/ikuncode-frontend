@@ -47,4 +47,10 @@ export default {
   questionUpdateByPost: (questionUpdateRequest) => {
     return AxiosClient.post("/question/update", questionUpdateRequest);
   },
+  /**
+   * 题目搜索
+   */
+  questionSearchByPost(questionSearchRequest) {
+    return AxiosClient.post("/question/search", questionSearchRequest);
+  },
 };
