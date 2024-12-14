@@ -35,17 +35,17 @@
           <MdEditor
             :value="question.questionDescription"
             :handleChange="handleQuestionDescriptionChange"
-            style="min-width: 115vh; margin-bottom: 16px"
+            style="min-width: 170vh; margin-bottom: 16px"
             placeholder="请输入题目描述（必填项），支持 markdown 语法"
           />
         </a-form-item>
         <!-- 题目答案 -->
         <a-form-item label="题目答案">
-          <MdEditor
-            :value="question.questionAnswer"
-            :handleChange="handleQuestionAnswerChange"
-            style="min-width: 115vh; margin-bottom: 16px"
-            placeholder="请输入题目答案（非必填项），支持 markdown 语法"
+          <a-textarea
+            placeholder="请输入题目答案（非必填项）"
+            v-model="question.questionAnswer"
+            allow-clear
+            :auto-size="{ minRows: 5 }"
           />
         </a-form-item>
         <!-- 判题用例 -->
@@ -161,6 +161,9 @@ const router = useRouter();
  * 初始化题目
  */
 const question = reactive({
+  questionTitle: "",
+  questionDescription: "",
+  questionTags: [],
   questionJudgeConfig: {
     timeLimit: 0,
     memoryLimit: 0,
@@ -214,6 +217,7 @@ const submitBtnType = computed(() => {
  * 题目描述 md 编辑器变化触发方法
  */
 const handleQuestionDescriptionChange = (v) => {
+  console.log(v);
   question.questionDescription = v;
 };
 

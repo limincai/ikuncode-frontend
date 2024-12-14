@@ -6,12 +6,14 @@
         <a-avatar class="user-avatar" @click="showUploadModal">
           <img
             :src="
-              loginUser.userAvatarUrl || GlobalConstant.DEFAULT_USER_AVATAR_URL
+              loginUser.userId !== route.params.userId
+                ? GlobalConstant.DEFAULT_USER_AVATAR_URL
+                : loginUser.userAvatarUrl ||
+                  GlobalConstant.DEFAULT_USER_AVATAR_URL
             "
             alt="user-avatar"
           />
         </a-avatar>
-        <h2 class="user-home-title">用户首页</h2>
       </div>
       <!-- 用户首页信息表单 -->
       <a-form :model="form" label-col="8" wrapper-col="16">
@@ -20,7 +22,11 @@
           <a-input v-model="form.userAccount" class="readonly-field" disabled />
         </a-form-item>
         <!-- 邮箱 -->
-        <a-form-item field="userEmail" label="注册邮箱">
+        <a-form-item
+          field="userEmail"
+          label="注册邮箱"
+          v-if="loginUser.userId === route.params.userId"
+        >
           <a-input v-model="form.userEmail" class="readonly-field" disabled />
         </a-form-item>
         <!-- 昵称 -->
@@ -136,8 +142,13 @@ const form = reactive({
  */
 const isModalVisible = ref(false);
 
-onMounted(() => {
-  Object.assign(form, loginUser);
+onMounted(async () => {
+  const res = await UserControllerApi.userGetByGet(route.params.userId);
+  if (!res) {
+    Message.error("当前用户不存在");
+    router.back();
+  }
+  Object.assign(form, res);
 });
 
 /**
@@ -213,12 +224,6 @@ const handleUpload = async ({ fileItem }) => {
     height: 100px;
     border-radius: 50%;
     cursor: pointer;
-  }
-
-  .user-home-title {
-    color: #4a00e0;
-    font-size: 24px;
-    font-weight: bold;
   }
 
   /* 输入框样式 */

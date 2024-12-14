@@ -46,4 +46,12 @@ export default {
   userUpdateByPost: (userUpdateRequest) => {
     return AxiosClient.post("/user/update", userUpdateRequest);
   },
+
+  /**
+   * 根据 id 获取用户
+   */
+  userGetByGet: (userId) => {
+    const url = `/user/${userId}`;
+    return AxiosClient.get(url);
+  },
 };

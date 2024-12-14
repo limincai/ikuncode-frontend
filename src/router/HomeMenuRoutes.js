@@ -26,7 +26,7 @@ const HomeMenuRoutes = [
     children: [
       {
         path: "/questions",
-        name: "题目",
+        name: "题目列表",
         component: QuestionListView,
         meta: {
           icon: IconList,

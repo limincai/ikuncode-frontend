@@ -3,10 +3,8 @@
     <Editor
       :value="props.value"
       :plugins="plugins"
-      @change="props.handleChange"
       :locale="zhHans"
-      :uploadImages="uploadImage"
-      :placeholder="props.placeholder"
+      @change="props.handleChange"
     />
   </div>
 </template>
@@ -59,19 +57,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  placeholder: {
-    type: String,
-    default: "",
-  },
   handleChange: {
     type: Function,
   },
 });
-
-const uploadImage = (files) => {
-  // todo 上传图片到后端
-  console.log(files);
-};
 </script>
 
 <style lang="scss">

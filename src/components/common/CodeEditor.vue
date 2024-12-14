@@ -1,10 +1,14 @@
 <template>
-  <div id="code-editor" ref="codeEditorRef" style="min-height: 400px"></div>
-  <!--  <a-button @click="fillValue"></a-button>-->
+  <div
+    id="code-editor"
+    ref="codeEditorRef"
+    :style="{ minHeight: props.codeEditorHeight + 'vh' }"
+  ></div>
 </template>
+
 <script setup>
 import * as monaco from "monaco-editor";
-import { onMounted, ref, toRaw } from "vue";
+import { onMounted, ref, toRaw, watch } from "vue";
 import CodeEditorTheme from "@/constant/CodeEditorTheme";
 import CodeLanguage from "@/constant/CodeLanguage";
 
@@ -12,7 +16,6 @@ import CodeLanguage from "@/constant/CodeLanguage";
  * 定义组件属性类型
  */
 const props = defineProps({
-  // 代码编辑器值
   value: {
     type: String,
     default:
@@ -22,28 +25,28 @@ const props = defineProps({
       "    }\n" +
       "}",
   },
-  // 代码编辑器语言
   language: {
     type: String,
     default: CodeLanguage.JAVA,
   },
-  // 是否启用小地图
   enableMinimap: {
     type: Boolean,
     default: false,
   },
-  // 代码字体大小
   fontSize: {
     type: Number,
     default: 12,
   },
-  // 编辑器主题
   theme: {
     type: String,
     default: CodeEditorTheme.VS,
   },
   handleChange: {
     type: Function,
+  },
+  codeEditorHeight: {
+    type: Number,
+    default: 100,
   },
 });
 
@@ -60,24 +63,20 @@ const codeEditor = ref();
 /**
  * 初始化代码编辑器
  */
-onMounted(() => {
-  if (!codeEditorRef.value) {
-    return;
-  }
-  // 代码编辑器选项
+const initializeEditor = () => {
+  if (!codeEditorRef.value) return;
+
+  // 创建 Monaco Editor 实例
   codeEditor.value = monaco.editor.create(codeEditorRef.value, {
-    value: props.value, // 编辑器值
-    language: props.language, // 编辑器语言
-    fontSize: props.fontSize, // 设置代码大小
+    value: props.value, // 初始化内容
+    language: props.language, // 编程语言
+    fontSize: props.fontSize, // 字体大小
     theme: props.theme, // 主题
     minimap: {
-      // 代码小地图
-      enabled: props.enableMinimap,
-      size: "proportional",
-      showSlider: "always",
-      scale: 2,
+      enabled: props.enableMinimap, // 是否启用小地图
+      scale: 100,
     },
-    automaticLayout: true,
+    automaticLayout: true, // 自动布局
     autoSurround: "languageDefined", // 是否应自动环绕选择
     acceptSuggestionOnCommitCharacter: true, // 接受关于提交字符的建议
     acceptSuggestionOnEnter: "on", // 接受输入建议 "on" | "off" | "smart"
@@ -97,7 +96,6 @@ onMounted(() => {
     contextmenu: true, // 启用上下文菜单
     columnSelection: false, // 启用列编辑 按下shift键位然后按↑↓键位可以实现列选择 然后实现列编辑
     cursorBlinking: "solid", // 光标动画样式
-    cursorSmoothCaretAnimation: true, // 是否启用光标平滑插入动画  当你在快速输入文字的时候 光标是直接平滑的移动还是直接"闪现"到当前文字所处位置
     cursorStyle: "UnderlineThin", // "Block"|"BlockOutline"|"Line"|"LineThin"|"Underline"|"UnderlineThin" 光标样式
     cursorSurroundingLines: 0, // 光标环绕行数 当文字输入超过屏幕时 可以看见右侧滚动条中光标所处位置是在滚动条中间还是顶部还是底部 即光标环绕行数 环绕行数越大 光标在滚动条中位置越居中
     cursorSurroundingLinesStyle: "all", // "default" | "all" 光标环绕样式
@@ -109,14 +107,62 @@ onMounted(() => {
     readOnly: false, // 是否只读
     roundedSelection: true,
     snippetSuggestions: "top",
-    scrollBeyondLastLine: true,
   });
 
-  // 编辑 监听内容变化
+  // 监听内容变化
   codeEditor.value.onDidChangeModelContent(() => {
-    props.handleChange(toRaw(codeEditor.value).getValue());
+    props.handleChange?.(toRaw(codeEditor.value).getValue());
   });
+};
+
+/**
+ * 更新编辑器配置
+ */
+const updateEditorOptions = (key, value) => {
+  if (codeEditor.value) {
+    const options = {};
+    options[key] = value;
+    codeEditor.value.updateOptions(options);
+  }
+};
+
+/**
+ * 生命周期：挂载时初始化编辑器
+ */
+onMounted(() => {
+  initializeEditor();
 });
+
+/**
+ * 监听 props 的变化并更新编辑器配置
+ */
+watch(
+  () => props.fontSize,
+  (newFontSize) => updateEditorOptions("fontSize", newFontSize)
+);
+
+watch(
+  () => props.theme,
+  (newTheme) => monaco.editor.setTheme(newTheme)
+);
+
+watch(
+  () => props.enableMinimap,
+  (newMinimap) =>
+    updateEditorOptions("minimap", {
+      enabled: newMinimap,
+    })
+);
+
+watch(
+  () => props.language,
+  (newLanguage) => {
+    const model = codeEditor.value.getModel();
+    if (model) {
+      monaco.editor.setModelLanguage(model, newLanguage);
+    }
+  }
+);
 </script>
 
 <style scoped></style>
