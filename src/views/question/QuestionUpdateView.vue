@@ -41,11 +41,12 @@
         </a-form-item>
         <!-- 题目答案 -->
         <a-form-item label="题目答案">
-          <a-textarea
-            placeholder="请输入题目答案（非必填项）"
-            v-model="question.questionAnswer"
-            allow-clear
-            :auto-size="{ minRows: 5 }"
+          <CodeEditor
+            :value="question.questionAnswer"
+            :handleChange="handleQuestionAnswerChange"
+            :code-editor-height="50"
+            :code-editor-weight="160"
+            :font-size="18"
           />
         </a-form-item>
         <!-- 判题用例 -->
@@ -153,6 +154,7 @@ import QuestionControllerApi from "@/api/QuestionControllerApi";
 import { Message } from "@arco-design/web-vue";
 import MdEditor from "@/components/common/MdEditor.vue";
 import { toNumber } from "lodash-es";
+import CodeEditor from "@/components/common/CodeEditor.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -164,6 +166,12 @@ const question = reactive({
   questionTitle: "",
   questionDescription: "",
   questionTags: [],
+  questionAnswer:
+    "public class Solution {\n" +
+    "    public void main(String[] args) {\n" +
+    "        // please code your code\n" +
+    "    }\n" +
+    "}",
   questionJudgeConfig: {
     timeLimit: 0,
     memoryLimit: 0,

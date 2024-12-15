@@ -2,7 +2,10 @@
   <div
     id="code-editor"
     ref="codeEditorRef"
-    :style="{ minHeight: props.codeEditorHeight + 'vh' }"
+    :style="{
+      minHeight: props.codeEditorHeight + 'vh',
+      minWidth: props.codeEditorWeight + 'vh',
+    }"
   ></div>
 </template>
 
@@ -45,6 +48,10 @@ const props = defineProps({
     type: Function,
   },
   codeEditorHeight: {
+    type: Number,
+    default: 100,
+  },
+  codeEditorWeight: {
     type: Number,
     default: 100,
   },

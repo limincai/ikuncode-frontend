@@ -1,18 +1,27 @@
 <template>
   <div id="question-add-answer">
-    <a-textarea
-      placeholder="请输入题目答案（非必填项"
-      v-model="questionAddRequest.questionAnswer"
-      allow-clear
-      :auto-size="{ minRows: 5 }"
+    <CodeEditor
+      :value="questionAddRequest.questionAnswer"
+      :handleChange="handleChange"
+      :code-editor-height="50"
+      :font-size="20"
     />
   </div>
 </template>
 
 <script lang="js" setup>
 import { useQuestionAddRequestStore } from "@/stores/questionAddRequest";
+import CodeEditor from "@/components/common/CodeEditor.vue";
 
 const questionAddRequest = useQuestionAddRequestStore().questionAddRequest;
+
+const handleChange = (v) => {
+  questionAddRequest.questionAnswer = v;
+};
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#question-add-answer {
+  margin: 0 auto;
+}
+</style>

@@ -9,7 +9,12 @@ export const useQuestionAddRequestStore = defineStore(
       questionTitle: "",
       questionDescription: "",
       questionTags: [],
-      questionAnswer: "",
+      questionAnswer:
+        "public class Solution {\n" +
+        "    public void main(String[] args) {\n" +
+        "        // please code your code\n" +
+        "    }\n" +
+        "}",
       questionJudgeCase: [
         {
           input: "",

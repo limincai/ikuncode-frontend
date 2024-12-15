@@ -5,6 +5,7 @@
       :plugins="plugins"
       :locale="zhHans"
       @change="props.handleChange"
+      :placeholder="props.placeholder"
     />
   </div>
 </template>
@@ -59,6 +60,9 @@ const props = defineProps({
   },
   handleChange: {
     type: Function,
+  },
+  placeholder: {
+    type: String,
   },
 });
 </script>

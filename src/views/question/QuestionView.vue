@@ -50,6 +50,7 @@
             >
               <IconSettings />
             </a-button>
+            <!-- 提交代码按钮 -->
             <a-button
               type="primary"
               class="submit-button"
@@ -74,10 +75,11 @@
                 :font-size="codeEditorProps.fontSize"
                 :enableMinimap="codeEditorProps.enableMinimap"
                 :code-editor-height="100"
+                :code-editor-weight="100"
               />
             </template>
             <!-- 判题状态 -->
-            <template #second>
+            <template #second v-if="flag">
               <div v-if="flag">判题状态</div>
             </template>
           </a-split>
@@ -109,7 +111,7 @@
           />
         </a-form-item>
         <!-- 是否启用小地图 -->
-        <a-form-item label="启用小地图">
+        <a-form-item label="代码小地图">
           <a-switch v-model="codeEditorProps.enableMinimap" />
         </a-form-item>
       </a-form>
@@ -241,10 +243,6 @@ onMounted(async () => {
   background-color: var(--arcoblue-6);
   color: #fff;
   border-radius: 4px;
-
-  &:hover {
-    background-color: var(--arcoblue-5);
-  }
 }
 
 .trigger-vertical {
@@ -253,10 +251,10 @@ onMounted(async () => {
   width: 3px;
   height: 100vh;
   flex-direction: column;
+}
 
-  &-line:hover {
-    background-color: rgb(var(--arcoblue-6));
-  }
+.trigger-vertical:hover {
+  background-color: rgb(47, 108, 248);
 }
 
 .trigger-horizontal {
@@ -264,10 +262,13 @@ onMounted(async () => {
   position: relative;
   width: 100%;
   height: 3px;
-  background-color: var(--color-bg-2);
 
   &-line:hover {
-    background-color: rgb(var(--arcoblue-6));
+    background-color: rgb(47, 108, 248);
   }
+}
+
+.trigger-horizontal:hover {
+  background-color: rgb(47, 108, 248);
 }
 </style>

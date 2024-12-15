@@ -13,6 +13,13 @@
       }"
       @pageChange="handlePageChange"
     >
+      <!-- 提交编号 -->
+      <template #questionSubmitId="{ record }">
+        <!-- todo 跳转到用户提交代码页面 -->
+        <a-link :hoverable="false" style="color: rgb(17, 47, 143)">
+          {{ record.questionSubmitId }}
+        </a-link>
+      </template>
       <!-- 题目 -->
       <template #questionLink="{ record }">
         <a-link
@@ -35,10 +42,17 @@
           {{ record.userVO.userNickname }}
         </a-link>
       </template>
-      <!-- 题目状态 -->
+      <!-- 判题状态 -->
       <template #status="{ record }">
-        <a-tag :color="statusColor(record.status)">
-          {{ statusText(record.status) }}
+        <a-tag :color="QuestionSubmitStatusMap[record.status].color">
+          <a-spin v-if="record.status === 0 || record.status === 1" />
+          {{ QuestionSubmitStatusMap[record.status].text }}
+        </a-tag>
+      </template>
+      <!-- 判题信息 -->
+      <template #message="{ record }">
+        <a-tag :color="judgeMessageColor(record.questionJudgeInfo.message)">
+          {{ record.questionJudgeInfo.message }}
         </a-tag>
       </template>
       <!-- 消耗内存 -->
@@ -56,9 +70,9 @@
 <script setup>
 import { onMounted, reactive, ref } from "vue";
 import QuestionSubmitControllerApi from "@/api/QuestionSubmitControllerApi";
-import { QuestionSubmitStatus } from "@/constant/QuestionStatus";
 import { useRouter } from "vue-router";
 import { useGlobalHeaderSelectedKey } from "@/stores/globalHeaderSelectedKey";
+import QuestionSubmitStatusMap from "@/constant/QuestionSubmitStatusMap";
 
 const router = useRouter();
 
@@ -80,6 +94,7 @@ const questionSubmitList = ref({
       questionJudgeInfo: {
         time: "",
         memory: "",
+        message: "",
       },
     },
   ],
@@ -95,42 +110,6 @@ const questionSubmitListRequest = reactive({
   // 页面尺寸
   pageSize: 10,
 });
-
-/**
- * 计算状态文本
- */
-const statusText = (status) => {
-  switch (status) {
-    case QuestionSubmitStatus.WAITING:
-      return "等待中";
-    case QuestionSubmitStatus.RUNNING:
-      return "运行中";
-    case QuestionSubmitStatus.SUCCEED:
-      return "成功";
-    case QuestionSubmitStatus.FAILED:
-      return "失败";
-    default:
-      return "未知状态";
-  }
-};
-
-/**
- * 计算标签颜色
- */
-const statusColor = (status) => {
-  switch (status) {
-    case QuestionSubmitStatus.WAITING:
-      return "gray"; // 等待中 蓝色
-    case QuestionSubmitStatus.RUNNING:
-      return "blue"; // 运行中 黄色
-    case QuestionSubmitStatus.SUCCEED:
-      return "green"; // 成功 绿色
-    case QuestionSubmitStatus.FAILED:
-      return "red"; // 失败 红色
-    default:
-      return "gray"; // 未知状态 灰色
-  }
-};
 
 /**
  * 获取题目提交列表
@@ -149,12 +128,40 @@ onMounted(async () => {
 });
 
 /**
+ * 判题信息标签颜色
+ */
+const judgeMessageColor = (message) => {
+  switch (message) {
+    case "成功":
+      return "green"; // ACCEPTED
+    case "答案错误":
+      return "red"; // WRONG_ANSWER
+    case "编译错误":
+      return "orange"; // COMPILE_WRONG
+    case "内存溢出":
+      return "purple"; // MEMORY_LIMIT_EXCEEDED
+    case "超时":
+      return "blue"; // TIME_LIMIT_EXCEEDED
+    case "输出溢出":
+      return "yellow"; // OUTPUT_LIMIT_EXCEEDED
+    case "运行错误":
+      return "red"; // RUNTIME_ERROR
+    case "系统错误":
+      return "gray"; // SYSTEM_ERROR
+    case "等待中":
+      return "default"; // WAITING
+    default:
+      return "default"; // 默认颜色
+  }
+};
+
+/**
  * 展示列
  */
 const columns = [
   {
     title: "提交编号",
-    dataIndex: "questionSubmitId",
+    slotName: "questionSubmitId",
     align: "center",
   },
   {
@@ -170,6 +177,11 @@ const columns = [
   {
     title: "状态",
     slotName: "status",
+    align: "center",
+  },
+  {
+    title: "判题信息",
+    slotName: "message",
     align: "center",
   },
   {
