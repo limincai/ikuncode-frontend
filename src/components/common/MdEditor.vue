@@ -6,6 +6,7 @@
       :locale="zhHans"
       @change="props.handleChange"
       :placeholder="props.placeholder"
+      :uploadImages="props.uploadImage"
     />
   </div>
 </template>
@@ -63,6 +64,9 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
+  },
+  uploadImage: {
+    type: Function,
   },
 });
 </script>

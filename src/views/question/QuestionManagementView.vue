@@ -147,7 +147,7 @@ const handlePageChange = async (currentPage) => {
  */
 const doQuestionDelete = async (questionId) => {
   const res = await QuestionControllerApi.questionDeleteByPost(questionId);
-  if (!res) {
+  if (res === undefined) {
     return;
   }
   Message.success("题目删除成功");

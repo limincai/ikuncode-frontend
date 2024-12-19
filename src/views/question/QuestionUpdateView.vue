@@ -37,6 +37,7 @@
             :handleChange="handleQuestionDescriptionChange"
             style="min-width: 170vh; margin-bottom: 16px"
             placeholder="请输入题目描述（必填项），支持 markdown 语法"
+            :uploadImage="uploadImage"
           />
         </a-form-item>
         <!-- 题目答案 -->
@@ -155,6 +156,7 @@ import { Message } from "@arco-design/web-vue";
 import MdEditor from "@/components/common/MdEditor.vue";
 import { toNumber } from "lodash-es";
 import CodeEditor from "@/components/common/CodeEditor.vue";
+import FileControllerApi from "@/api/FileControllerApi";
 
 const route = useRoute();
 const router = useRouter();
@@ -167,11 +169,12 @@ const question = reactive({
   questionDescription: "",
   questionTags: [],
   questionAnswer:
-    "public class Solution {\n" +
-    "    public void main(String[] args) {\n" +
+    "public class Main {\n" +
+    "\n" +
+    "    public static void main(String[] args) {\n" +
     "        // please code your code\n" +
     "    }\n" +
-    "}",
+    "}\n",
   questionJudgeConfig: {
     timeLimit: 0,
     memoryLimit: 0,
@@ -237,6 +240,16 @@ const handleQuestionAnswerChange = (v) => {
 };
 
 /**
+ * md 编辑器上传图片
+ */
+const uploadImage = async (files) => {
+  const formData = new FormData();
+  formData.append("file", files[0]);
+  const res = await FileControllerApi.uploadImg(formData);
+  question.questionDescription += `<img src="${res}" width="150"/>`;
+};
+
+/**
  * 判题用例数组长度
  */
 const judgeCaseLength = computed(() => {
@@ -265,39 +278,6 @@ const removeCase = (index) => {
  * 题目更新
  */
 const handleSubmit = async () => {
-  // 过滤出不合法的判题用例
-  // 处理逻辑
-  question.questionJudgeCase = question.questionJudgeCase.reduce(
-    (result, item) => {
-      // 如果 input 和 output 的状态不匹配，统一设置为空字符串
-      if (
-        (item.input === "" && item.output !== "") ||
-        (item.input !== "" && item.output === "")
-      ) {
-        item.input = "";
-        item.output = "";
-      }
-
-      // 判断是否是空的用例
-      const isEmptyCase = item.input === "" && item.output === "";
-
-      // 保留第一个空的用例，其他空的用例过滤掉
-      if (isEmptyCase) {
-        if (
-          result.some(
-            (caseItem) => caseItem.input === "" && caseItem.output === ""
-          )
-        ) {
-          return result;
-        }
-      }
-      // 添加符合条件的用例到结果数组
-      result.push(item);
-      return result;
-    },
-    []
-  );
-
   const res = await QuestionControllerApi.questionUpdateByPost(question);
   if (res === undefined) {
     return;

@@ -2,6 +2,9 @@
   <div id="global-footer">
     © 2024 IkunCode 版权所有 | powered by
     <a-link :href="GlobalConstant.GITHUB_URL" icon target="_blank">
+      <template #icon>
+        <icon-github />
+      </template>
       limincai
     </a-link>
   </div>

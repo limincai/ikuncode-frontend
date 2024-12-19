@@ -74,13 +74,36 @@
                 :theme="codeEditorProps.theme"
                 :font-size="codeEditorProps.fontSize"
                 :enableMinimap="codeEditorProps.enableMinimap"
-                :code-editor-height="100"
+                :code-editor-height="50"
                 :code-editor-weight="100"
               />
             </template>
             <!-- 判题状态 -->
-            <template #second v-if="flag">
-              <div v-if="flag">判题状态</div>
+            <template #second>
+              <div v-if="flag" class="status-container">
+                <a-card title="判题信息">
+                  <template #extra v-if="isLoading">
+                    <a-spin :spinning="isLoading" size="small" />
+                  </template>
+                  <div v-if="isLoading">
+                    <p>执行中...</p>
+                  </div>
+                  <div v-else>
+                    <p v-if="judgeInfo.message">
+                      信息: {{ judgeInfo.message }}
+                    </p>
+                    <p v-else>信息: 无</p>
+                    <p>
+                      执行时间:
+                      {{ judgeInfo.time ? judgeInfo.time + " ms" : "无" }}
+                    </p>
+                    <p>
+                      内存:
+                      {{ judgeInfo.memory ? judgeInfo.memory + " KB" : "无" }}
+                    </p>
+                  </div>
+                </a-card>
+              </div>
             </template>
           </a-split>
         </div>
@@ -145,9 +168,15 @@ const question = reactive({
 });
 
 /**
- * 判题状态是否显示
+ * 判题状态显示标识
  */
 const flag = ref(false);
+const isLoading = ref(true); // 判题是否正在进行中
+const judgeInfo = reactive({
+  message: "WAITING",
+  time: null,
+  memory: null,
+});
 
 /**
  * 是否显示设置弹框
@@ -159,11 +188,12 @@ const showSettings = ref(false);
  */
 const codeEditorProps = reactive({
   value:
-    "public class Solution {\n" +
-    "    public void main(String[] args) {\n" +
-    "        // please code your code\n" +
-    "    }\n" +
-    "}",
+    "public class Main {\n" +
+    "\n" +
+    "   public static void main(String[] args) {\n" +
+    "   // please code your code\n" +
+    "   }\n" +
+    "}\n",
   language: CodeLanguage.JAVA,
   theme: CodeEditorTheme.VS,
   fontSize: 14,
@@ -177,6 +207,7 @@ const codeEditorProps = reactive({
  * 提交代码方法
  */
 const doQuestionSubmit = async () => {
+  flag.value = true;
   const res = await QuestionSubmitControllerApi.doSubmitQuestionByPost({
     userId: useLoginUserStore().loginUser.userId,
     questionId: question.questionId,
@@ -187,7 +218,11 @@ const doQuestionSubmit = async () => {
     Message.error("提交错误");
     return;
   }
+  isLoading.value = false;
   Message.success("题目提交成功");
+  judgeInfo.message = res.message || "无";
+  judgeInfo.time = res.time;
+  judgeInfo.memory = res.memory;
 };
 
 /**
@@ -213,6 +248,7 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .question-view {
+  height: 80vh;
   padding: 0 20px 20px 20px;
 }
 

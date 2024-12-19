@@ -31,7 +31,12 @@ export const useQuestionAddRequestStore = defineStore(
     const clearQuestionAddRequest = () => {
       questionAddRequest.questionTitle = "";
       questionAddRequest.questionDescription = "";
-      questionAddRequest.questionAnswer = "";
+      questionAddRequest.questionAnswer =
+        "public class Main {\n" +
+        "    public static void main(String[] args) {\n" +
+        "        // please code your code\n" +
+        "    }\n" +
+        "}";
       questionAddRequest.questionTags = [];
       questionAddRequest.questionJudgeCase = [
         {

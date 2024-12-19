@@ -155,37 +155,6 @@ const handleNextStep = () => {
  * 点击提交按钮
  */
 const handleSubmit = async () => {
-  // 过滤出不合法的判题用例
-  // 处理逻辑
-  questionAddRequest.questionJudgeCase =
-    questionAddRequest.questionJudgeCase.reduce((result, item) => {
-      // 如果 input 和 output 的状态不匹配，统一设置为空字符串
-      if (
-        (item.input === "" && item.output !== "") ||
-        (item.input !== "" && item.output === "")
-      ) {
-        item.input = "";
-        item.output = "";
-      }
-
-      // 判断是否是空的用例
-      const isEmptyCase = item.input === "" && item.output === "";
-
-      // 保留第一个空的用例，其他空的用例过滤掉
-      if (isEmptyCase) {
-        if (
-          result.some(
-            (caseItem) => caseItem.input === "" && caseItem.output === ""
-          )
-        ) {
-          return result;
-        }
-      }
-      // 添加符合条件的用例到结果数组
-      result.push(item);
-      return result;
-    }, []);
-
   const res = await QuestionControllerApi.questionAddByPost(questionAddRequest);
   if (res === undefined) {
     return;

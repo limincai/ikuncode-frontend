@@ -5,7 +5,6 @@
       :plugins="plugins"
       @change="props.handleChange"
       :locale="zhHans"
-      :uploadImages="uploadImage"
       :placeholder="props.placeholder"
     />
   </div>
@@ -67,11 +66,6 @@ const props = defineProps({
     type: Function,
   },
 });
-
-const uploadImage = (files) => {
-  // todo 上传图片到后端
-  console.log(files);
-};
 </script>
 
 <style lang="scss">

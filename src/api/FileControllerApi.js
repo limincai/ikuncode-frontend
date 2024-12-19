@@ -12,4 +12,15 @@ export default {
       },
     });
   },
+
+  /**
+   * 上传图片
+   */
+  uploadImg: (file) => {
+    return AxiosClient.post("/file/upload-img", file, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
 };

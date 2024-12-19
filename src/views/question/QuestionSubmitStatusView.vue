@@ -44,13 +44,13 @@
       </template>
       <!-- 判题状态 -->
       <template #status="{ record }">
-        <a-tag :color="QuestionSubmitStatusMap[record.status].color">
+        <a-tag
+          :color="QuestionSubmitStatusMap[record.status].color"
+          v-if="record.status === 0 || record.status === 1"
+        >
           <a-spin v-if="record.status === 0 || record.status === 1" />
           {{ QuestionSubmitStatusMap[record.status].text }}
         </a-tag>
-      </template>
-      <!-- 判题信息 -->
-      <template #message="{ record }">
         <a-tag :color="judgeMessageColor(record.questionJudgeInfo.message)">
           {{ record.questionJudgeInfo.message }}
         </a-tag>
@@ -177,11 +177,6 @@ const columns = [
   {
     title: "状态",
     slotName: "status",
-    align: "center",
-  },
-  {
-    title: "判题信息",
-    slotName: "message",
     align: "center",
   },
   {
