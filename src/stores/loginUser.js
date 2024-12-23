@@ -107,6 +107,7 @@ export const useLoginUserStore = defineStore(
       userNickname: "",
       userAvatarUrl: "",
       createTime: null,
+      acceptedQuestionNum: 0,
     });
 
     /**

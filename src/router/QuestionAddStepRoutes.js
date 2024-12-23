@@ -7,7 +7,7 @@ import QuestionAddJudgeConfig from "@/components/questionaddstep/QuestionAddJudg
 
 const QuestionAddStepRoutes = [
   {
-    path: "/question/add/basic-info",
+    path: "/home/add/basic-info",
     name: "基本信息",
     component: QuestionAddBasicInfo,
     meta: {
@@ -16,7 +16,7 @@ const QuestionAddStepRoutes = [
     },
   },
   {
-    path: "/question/add/description",
+    path: "/home/add/description",
     name: "题目描述",
     component: QuestionAddDescription,
     meta: {
@@ -25,7 +25,7 @@ const QuestionAddStepRoutes = [
     },
   },
   {
-    path: "/question/add/answer",
+    path: "/home/add/answer",
     name: "题目答案",
     component: QuestionAddAnswer,
     meta: {
@@ -34,7 +34,7 @@ const QuestionAddStepRoutes = [
     },
   },
   {
-    path: "/question/add/judge-case",
+    path: "/home/add/judge-case",
     name: "判题用例",
     component: QuestionAddJudgeCase,
     meta: {
@@ -43,7 +43,7 @@ const QuestionAddStepRoutes = [
     },
   },
   {
-    path: "/question/add/judge-config",
+    path: "/home/add/judge-config",
     name: "判题配置",
     component: QuestionAddJudgeConfig,
     meta: {

@@ -158,7 +158,7 @@ const doQuestionDelete = async (questionId) => {
 // 跳转动题目更新页面
 const toQuestionUpdateView = (record) => {
   router.push({
-    path: "/question/update",
+    path: "/home/update",
     query: {
       questionId: record.questionId,
     },

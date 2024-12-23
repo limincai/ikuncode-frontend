@@ -93,7 +93,7 @@ watch(
   () => route.path,
   (newPath) => {
     // 题目更新页面不改变
-    if (newPath === ("/question/update")) {
+    if (newPath === ("/home/update")) {
       return;
     }
     // 做题页面不改变

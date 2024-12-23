@@ -1,5 +1,5 @@
 import UserRole from "@/constant/UserRole";
-import QuestionListView from "@/views/question/QuestionListView.vue";
+import QuestionListView from "@/views/home/QuestionListView.vue";
 import {
   IconCommand,
   IconEdit,
@@ -9,14 +9,14 @@ import {
   IconUserGroup,
 } from "@arco-design/web-vue/es/icon";
 import BasicLayout from "@/layouts/BasicLayout.vue";
-import CommunicationView from "@/views/question/CommunicationView.vue";
-import RankingView from "@/views/question/RankingView.vue";
-import QuestionSubmitStatusView from "@/views/question/QuestionSubmitStatusView.vue";
+import CommunicationView from "@/views/home/CommunicationView.vue";
+import RankingView from "@/views/home/UserRankingView.vue";
+import QuestionSubmitStatusView from "@/views/home/QuestionSubmitStatusView.vue";
 import QuestionAddStepRoutes from "@/router/QuestionAddStepRoutes";
-import QuestionManagementView from "@/views/question/QuestionManagementView.vue";
-import QuestionAddVIew from "@/views/question/QuestionAddView.vue";
-import QuestionUpdateView from "@/views/question/QuestionUpdateView.vue";
-import QuestionView from "@/views/question/QuestionView.vue";
+import QuestionManagementView from "@/views/home/QuestionManagementView.vue";
+import QuestionAddVIew from "@/views/home/QuestionAddView.vue";
+import QuestionUpdateView from "@/views/home/QuestionUpdateView.vue";
+import QuestionView from "@/views/home/QuestionView.vue";
 
 const HomeMenuRoutes = [
   {
@@ -33,7 +33,7 @@ const HomeMenuRoutes = [
         },
       },
       {
-        path: "/question/add",
+        path: "/home/add",
         name: "添加题目",
         component: QuestionAddVIew,
         meta: {
@@ -53,7 +53,7 @@ const HomeMenuRoutes = [
       },
       // 题目更新页面
       {
-        path: "/question/update",
+        path: "/home/update",
         name: "题目更新",
         component: QuestionUpdateView,
         meta: {

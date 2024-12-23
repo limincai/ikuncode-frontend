@@ -54,6 +54,14 @@
         <a-form-item field="createTime" label="创建时间">
           <a-input v-model="form.createTime" class="readonly-field" disabled />
         </a-form-item>
+        <!-- 完成题目数量 -->
+        <a-form-item field="acceptedQuestionNum" label="完成题目">
+          <a-input
+            v-model="form.acceptedQuestionNum"
+            class="readonly-field"
+            disabled
+          />
+        </a-form-item>
         <!-- 用户鸡脚数量 -->
         <a-form-item
           field="createTime"
@@ -135,6 +143,7 @@ const form = reactive({
   createTime: "",
   userProfile: "",
   userJijiao: 0,
+  acceptedQuestionNum: 0,
 });
 
 /**

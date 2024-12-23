@@ -28,7 +28,7 @@ export const useQuestionAddCurrentStepStore = defineStore(
       enabled: true, // 开启持久化
       strategies: [
         {
-          key: "question-add-current-step",
+          key: "home-add-current-step",
           storage: localStorage,
         },
       ],

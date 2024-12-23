@@ -54,4 +54,11 @@ export default {
     const url = `/user/${userId}`;
     return AxiosClient.get(url);
   },
+
+  /**
+   * 获取用户排名列表
+   */
+  getUserRankingListByPost: (userRankingRequest) => {
+    return AxiosClient.post("/user/ranking", userRankingRequest);
+  },
 };

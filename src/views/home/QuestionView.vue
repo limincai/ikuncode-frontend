@@ -15,7 +15,7 @@
               <icon-code-block />
               题目描述
             </template>
-            <a-scrollbar type="track" style="height: 100vh; overflow: auto">
+            <a-scrollbar type="track" style="height: 78vh; overflow: auto">
               <MdViewer :value="question.questionDescription" />
             </a-scrollbar>
           </a-tab-pane>
@@ -80,27 +80,31 @@
             </template>
             <!-- 判题状态 -->
             <template #second>
-              <div v-if="flag" class="status-container">
-                <a-card title="判题信息">
-                  <template #extra v-if="isLoading">
-                    <a-spin :spinning="isLoading" size="small" />
-                  </template>
+              <div v-if="flag" class="judge-status-container">
+                <a-card title="判题状态" :bordered="false" class="judge-card">
                   <div v-if="isLoading">
-                    <p>执行中...</p>
+                    <a-spin />
+                    <p>判题中</p>
                   </div>
-                  <div v-else>
-                    <p v-if="judgeInfo.message">
-                      信息: {{ judgeInfo.message }}
-                    </p>
-                    <p v-else>信息: 无</p>
-                    <p>
-                      执行时间:
-                      {{ judgeInfo.time ? judgeInfo.time + " ms" : "无" }}
-                    </p>
-                    <p>
-                      内存:
-                      {{ judgeInfo.memory ? judgeInfo.memory + " KB" : "无" }}
-                    </p>
+                  <div class="judge-status-content" v-if="!isLoading">
+                    <div class="judge-row">
+                      <div class="judge-label">执行消息：</div>
+                      <div class="judge-value">
+                        {{ judgeInfo.message || "无" }}
+                      </div>
+                    </div>
+                    <div class="judge-row">
+                      <div class="judge-label">消耗内存：</div>
+                      <div class="judge-value">
+                        {{ judgeInfo.memory ? judgeInfo.memory + " mb" : "无" }}
+                      </div>
+                    </div>
+                    <div class="judge-row">
+                      <div class="judge-label">消耗时间：</div>
+                      <div class="judge-value">
+                        {{ judgeInfo.time ? judgeInfo.time + " ms" : "无" }}
+                      </div>
+                    </div>
                   </div>
                 </a-card>
               </div>
@@ -151,7 +155,7 @@ import CodeEditorTheme from "@/constant/CodeEditorTheme";
 import MdViewer from "@/components/common/MdViewer.vue";
 import CodeEditor from "@/components/common/CodeEditor.vue";
 import QuestionComment from "@/components/question/QuestionComment.vue";
-import QuestionSubmitRecords from "@/components/question/QuestionSubmitRecords.vue";
+import QuestionSubmitRecords from "@/components/question/UserQuestionSubmitRecords.vue";
 import QuestionSubmitControllerApi from "@/api/QuestionSubmitControllerApi";
 import { useLoginUserStore } from "@/stores/loginUser";
 import { Message } from "@arco-design/web-vue";
@@ -208,6 +212,7 @@ const codeEditorProps = reactive({
  */
 const doQuestionSubmit = async () => {
   flag.value = true;
+  isLoading.value = true;
   const res = await QuestionSubmitControllerApi.doSubmitQuestionByPost({
     userId: useLoginUserStore().loginUser.userId,
     questionId: question.questionId,
@@ -219,7 +224,7 @@ const doQuestionSubmit = async () => {
     return;
   }
   isLoading.value = false;
-  Message.success("题目提交成功");
+  Message.success("判题成功");
   judgeInfo.message = res.message || "无";
   judgeInfo.time = res.time;
   judgeInfo.memory = res.memory;
@@ -306,5 +311,34 @@ onMounted(async () => {
 
 .trigger-horizontal:hover {
   background-color: rgb(47, 108, 248);
+}
+
+.judge-status-container {
+  .judge-card {
+    border-radius: 8px;
+    padding: 10px;
+
+    .judge-status-content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .judge-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+
+        .judge-label {
+          font-weight: bold;
+          color: #333;
+        }
+
+        .judge-value {
+          color: #666;
+        }
+      }
+    }
+  }
 }
 </style>

@@ -59,7 +59,7 @@ export const useQuestionAddRequestStore = defineStore(
       enabled: true, // 开启持久化
       strategies: [
         {
-          key: "question-add-request",
+          key: "home-add-request",
           storage: localStorage,
         },
       ],

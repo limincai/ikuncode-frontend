@@ -1,6 +1,6 @@
 import HomeMenuRoutes from "@/router/HomeMenuRoutes";
 import UserRoutes from "@/router/UserRoutes";
-import QuestionView from "@/views/question/QuestionView.vue";
+import QuestionView from "@/views/home/QuestionView.vue";
 import UserRole from "@/constant/UserRole";
 import NotFoundView from "@/views/NotFoundView.vue";
 

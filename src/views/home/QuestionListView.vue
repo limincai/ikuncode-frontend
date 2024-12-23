@@ -47,7 +47,7 @@
             v-for="(tag, index) in record.questionTags"
             :key="index"
             class="question-tag"
-            color="blue"
+            :color="tagColor(tag)"
           >
             {{ tag }}
           </a-tag>
@@ -137,6 +137,22 @@ const columns = [
     align: "center",
   },
 ];
+
+/**
+ * 标签颜色
+ */
+const tagColor = (tag) => {
+  switch (tag) {
+    case "入门":
+      return "green";
+    case "中等":
+      return "orange";
+    case "困难":
+      return "red";
+    default:
+      return "blue";
+  }
+};
 
 /**
  * 计算通过率
